@@ -1,0 +1,448 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4C9076C8-05E5-4EA7-A05D-5B65A27D5B30}</ProjectGuid>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CRMS_WEB</RootNamespace>
+    <AssemblyName>CRMS_WEB</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>12.0</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 12.0\ReportViewer\Microsoft.ReportViewer.WebForms.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.30506.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.30506.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\MainController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\RequisitionController.cs" />
+    <Compile Include="Controllers\ServicesController.cs" />
+    <Compile Include="Controllers\StockController.cs" />
+    <Compile Include="Controllers\SysMassageController.cs" />
+    <Compile Include="Controllers\SysSmsController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Coverts\ConvertClass.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\beans\CustomerModel.cs" />
+    <Compile Include="Models\beans\CustomerViewModel.cs" />
+    <Compile Include="Models\beans\MassageModel.cs" />
+    <Compile Include="Models\beans\NewsModel.cs" />
+    <Compile Include="Models\beans\PartsModel.cs" />
+    <Compile Include="Models\beans\PartsBrandModel.cs" />
+    <Compile Include="Models\beans\PartsTypeModel.cs" />
+    <Compile Include="Models\beans\PriorityModel.cs" />
+    <Compile Include="Models\beans\ProductBrandModel.cs" />
+    <Compile Include="Models\beans\ProductModel.cs" />
+    <Compile Include="Models\beans\ProductTypeModel.cs" />
+    <Compile Include="Models\beans\RepairDetailModel.cs" />
+    <Compile Include="Models\beans\RepairModel.cs" />
+    <Compile Include="Models\beans\RepStatusModel.cs" />
+    <Compile Include="Models\beans\RequisitionModel.cs" />
+    <Compile Include="Models\beans\StockModel.cs" />
+    <Compile Include="Models\beans\UserProfileModel.cs" />
+    <Compile Include="Models\beans\UsersModel.cs" />
+    <Compile Include="Models\DAO\CustomerDAO.cs" />
+    <Compile Include="Models\beans\IMPL\DAO.cs" />
+    <Compile Include="Models\DAO\MassageDAO.cs" />
+    <Compile Include="Models\DAO\NewsDAO.cs" />
+    <Compile Include="Models\DAO\PartsBrandDAO.cs" />
+    <Compile Include="Models\DAO\PartsDAO.cs" />
+    <Compile Include="Models\DAO\PartsTypeDAO.cs" />
+    <Compile Include="Models\DAO\PriorityDAO.cs" />
+    <Compile Include="Models\DAO\ProductBrandDAO.cs" />
+    <Compile Include="Models\DAO\ProductDAO.cs" />
+    <Compile Include="Models\DAO\ProductTypeDAO.cs" />
+    <Compile Include="Models\DAO\RepairDAO.cs" />
+    <Compile Include="Models\DAO\RepStatusDAO.cs" />
+    <Compile Include="Models\DAO\RequisitionDAO.cs" />
+    <Compile Include="Models\DAO\StockDAO.cs" />
+    <Compile Include="Models\DAO\UsersDAO.cs" />
+    <Compile Include="Models\DB\Database.cs" />
+    <Compile Include="Models\Ext\UID.cs" />
+    <Compile Include="Models\beans\WorkingEmployeesViewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportDataSet\RepairingDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RepairingDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ReportDataSet\ReqDataSetBill.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReqDataSetBill.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ReportDataSet\RequisitionReportDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RequisitionReportDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ReportDataSet\WorkingDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WorkingDataSet.xsd</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Content\DateTimePicker\build\jquery.datetimepicker.full.js" />
+    <Content Include="Content\DateTimePicker\build\jquery.datetimepicker.full.min.js" />
+    <Content Include="Content\DateTimePicker\build\jquery.datetimepicker.min.css" />
+    <Content Include="Content\DateTimePicker\build\jquery.datetimepicker.min.js" />
+    <Content Include="Content\DateTimePicker\jquery.datetimepicker.css" />
+    <Content Include="Content\DateTimePicker\jquery.js" />
+    <Content Include="Content\images\240x90.gif" />
+    <Content Include="Content\images\286x100.gif" />
+    <Content Include="Content\images\290x100.gif" />
+    <Content Include="Content\images\290x105.gif" />
+    <Content Include="Content\images\64x64.gif" />
+    <Content Include="Content\images\avatar.gif" />
+    <Content Include="Content\images\favicon.png" />
+    <Content Include="Content\images\gallery_1.gif" />
+    <Content Include="Content\images\gallery_2.gif" />
+    <Content Include="Content\images\gallery_3.gif" />
+    <Content Include="Content\images\gallery_default.jpg" />
+    <Content Include="Content\images\imgl.gif" />
+    <Content Include="Content\images\imgr.gif" />
+    <Content Include="Content\images\L1.jpg" />
+    <Content Include="Content\images\L2.jpg" />
+    <Content Include="Content\images\L3.jpg" />
+    <Content Include="Content\images\loading.gif" />
+    <Content Include="Content\images\loading2.gif" />
+    <Content Include="Content\images\S1.jpg" />
+    <Content Include="Content\images\S2.jpg" />
+    <Content Include="Content\images\S3.jpg" />
+    <Content Include="Content\JS\crmsJS.js" />
+    <Content Include="Content\JS\jquery-3.1.0.min.js" />
+    <Content Include="Content\images\No_image.png" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="Content\styles\Bootstrap\css\bootstrap-theme.css" />
+    <Content Include="Content\styles\Bootstrap\css\bootstrap-theme.min.css" />
+    <Content Include="Content\styles\Bootstrap\css\bootstrap.css" />
+    <Content Include="Content\styles\Bootstrap\css\bootstrap.min.css" />
+    <Content Include="Content\styles\Bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\styles\Bootstrap\js\bootstrap.js" />
+    <Content Include="Content\styles\Bootstrap\js\bootstrap.min.js" />
+    <Content Include="Content\styles\Bootstrap\js\npm.js" />
+    <Content Include="Content\styles\forms.css" />
+    <Content Include="Content\styles\homepage.css" />
+    <Content Include="Content\styles\layout.css" />
+    <Content Include="Content\styles\navi.css" />
+    <Content Include="Content\styles\tables.css" />
+    <Content Include="Global.asax" />
+    <Content Include="Views\Services\Index.cshtml" />
+    <Content Include="Views\Services\Services.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Content\img_repair\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Template_index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\styles\Bootstrap\css\bootstrap-theme.css.map" />
+    <Content Include="Content\styles\Bootstrap\css\bootstrap-theme.min.css.map" />
+    <Content Include="Content\styles\Bootstrap\css\bootstrap.css.map" />
+    <Content Include="Content\styles\Bootstrap\css\bootstrap.min.css.map" />
+    <Content Include="Content\styles\Bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\styles\Bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\styles\Bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\styles\Bootstrap\fonts\glyphicons-halflings-regular.woff2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Login\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Template_admin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Template_emp.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Template_cust.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Main\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\crms_publish.pubxml" />
+    <Content Include="Views\User\ManageManager.cshtml" />
+    <Content Include="Views\User\ManageEmployees.cshtml" />
+    <Content Include="Views\Customer\ManageCustomer.cshtml" />
+    <Content Include="Views\Product\ManageProduct.cshtml" />
+    <Content Include="Views\Product\Alert.cshtml" />
+    <Content Include="Views\Product\ManageProduct_DataLoading.cshtml" />
+    <Content Include="Views\Customer\AddCustomer.cshtml" />
+    <Content Include="Views\Customer\ConfirmAddCustomer.cshtml" />
+    <Content Include="Views\User\AddManager.cshtml" />
+    <Content Include="Views\User\ConfirmAddManager.cshtml" />
+    <Content Include="Views\User\AddEmployees.cshtml" />
+    <Content Include="Views\User\ConfirmAddEmployees.cshtml" />
+    <Content Include="Views\Services\ConfirmInsertServices.cshtml" />
+    <Content Include="Views\Login\Alert.cshtml" />
+    <Content Include="Views\Services\EditRepair.cshtml" />
+    <Content Include="Views\Services\RepairDescription.cshtml" />
+    <Content Include="Views\Services\WithdrawParts.cshtml" />
+    <Content Include="Views\Stock\Index.cshtml" />
+    <Content Include="Views\Stock\StockManagement.cshtml" />
+    <Content Include="Views\Stock\alert.cshtml" />
+    <Content Include="Views\Stock\PartsTypeManagement.cshtml" />
+    <Content Include="Views\Stock\StockManagement_DataLoading.cshtml" />
+    <Content Include="Views\Stock\PartsBrandManagement.cshtml" />
+    <Content Include="Views\Product\ProductBrandManagement.cshtml" />
+    <Content Include="Views\Product\ProductTypeManagement.cshtml" />
+    <Content Include="Views\Stock\StockAdding_Popup.cshtml" />
+    <Content Include="Views\Stock\stockEdeting_Popup.cshtml" />
+    <Content Include="Views\Services\WithdrawPartsAdding_popup.cshtml" />
+    <Content Include="Views\Requisition\approbationManagement.cshtml" />
+    <Content Include="Views\Requisition\Approbation_popup.cshtml" />
+    <Content Include="Views\Services\RepairDescription_WithdrawEditPopup.cshtml" />
+    <Content Include="Views\Customer\Alert.cshtml" />
+    <Content Include="Views\User\UserEditing.cshtml" />
+    <Content Include="Views\Customer\CustomerEditing.cshtml" />
+    <Content Include="Views\User\ManagerProfile.cshtml" />
+    <Content Include="Views\User\EmployeeProfile.cshtml" />
+    <Content Include="Views\Requisition\RequisitionReportView.cshtml" />
+    <Content Include="ReportDataSet\RequisitionReportDataSet.xsc">
+      <DependentUpon>RequisitionReportDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="ReportDataSet\RepairingDataSet.xsc">
+      <DependentUpon>RepairingDataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="ReportDataSet\RepairingDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>RepairingDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="ReportDataSet\RepairingDataSet.xss">
+      <DependentUpon>RepairingDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="ReportDataSet\ReqDataSetBill.xsc">
+      <DependentUpon>ReqDataSetBill.xsd</DependentUpon>
+    </Content>
+    <None Include="ReportDataSet\ReqDataSetBill.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ReqDataSetBill.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="ReportDataSet\ReqDataSetBill.xss">
+      <DependentUpon>ReqDataSetBill.xsd</DependentUpon>
+    </Content>
+    <None Include="ReportDataSet\RequisitionReportDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>RequisitionReportDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="ReportDataSet\RequisitionReportDataSet.xss">
+      <DependentUpon>RequisitionReportDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="Views\Requisition\Alert.cshtml" />
+    <Content Include="Views\Services\RepairingReportView.cshtml" />
+    <Content Include="Views\Customer\CustomerProfile.cshtml" />
+    <Content Include="Views\SysMassage\CustomerMassage.cshtml" />
+    <Content Include="Views\SysMassage\CustomerMassage_MassageAddingpopup.cshtml" />
+    <Content Include="Views\User\EmployeesWorkingReportView.cshtml" />
+    <Content Include="ReportDataSet\WorkingDataSet.xsc">
+      <DependentUpon>WorkingDataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="ReportDataSet\WorkingDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>WorkingDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="ReportDataSet\WorkingDataSet.xss">
+      <DependentUpon>WorkingDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="Views\Main\Staff.cshtml" />
+    <Content Include="Views\Main\C.cshtml" />
+    <Content Include="Views\Login\Registration.cshtml" />
+    <Content Include="Views\Home\ServiceList.cshtml" />
+    <Content Include="Views\Home\ContactUs.cshtml" />
+    <Content Include="Views\Customer\Profile.cshtml" />
+    <Content Include="Views\Customer\MyProfileEditing.cshtml" />
+    <Content Include="Views\SysMassage\ReadMassage.cshtml" />
+    <Content Include="Views\Services\ReadUpdateRepair.cshtml" />
+    <Content Include="Views\Services\ReadRepairDescription.cshtml" />
+    <Content Include="Views\Services\ListCustService.cshtml" />
+    <Content Include="Views\Services\CustServiceDetail.cshtml" />
+    <Content Include="Views\SysSms\SmsCustomer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Reportor\BillServicesAssign_Printing.rdlc" />
+    <EmbeddedResource Include="Reportor\EmployeeWorkingReport.rdlc" />
+    <EmbeddedResource Include="Reportor\ExportBill.rdlc" />
+    <EmbeddedResource Include="Reportor\RepairingReport.rdlc" />
+    <EmbeddedResource Include="Reportor\RequisitionReport.rdlc" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>52087</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:52072/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

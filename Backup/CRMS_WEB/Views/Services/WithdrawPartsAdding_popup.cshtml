@@ -1,0 +1,80 @@
+﻿@using CRMS_WEB.Models.beans;
+@{
+    var stk = ViewBag.Stock as StockModel;
+}
+<div class="modal fade" id="withdraw" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">การเบิกอะไหล่</h4>
+            </div>
+            @using (Html.BeginForm("WithdrawPartsInserting", "Services", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <table>
+                        <tr>
+                            <td class="">
+                                <label for="inputEmail3" class="col-lg-4 control-label">จำนวนของ</label>
+                                <div class="col-lg-8">
+                                    @stk.UNIT
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="">
+                                <label for="inputEmail3" class="col-lg-4 control-label">รายการเบิก</label>
+                                <div class="col-lg-8">
+                                    @stk.PART.TYPE.PART_TYPE_NAME @stk.PART.BRAND.PART_BRAND_NAME @stk.STOCK_INFO
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="">
+                                <label for="inputEmail3" class="col-lg-4 control-label">ราคา/หน่วย</label>
+                                <div class="col-lg-8">
+                                    @stk.PRICE.ToString("##,##")
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="inputEmail3" class="col-lg-4 control-label">จำนวนที่ต้องการเบิก</label>
+                                <input type="hidden" name="userID" value="@Session["ID"]" />  <!-- ผู้เบิก -->
+                                <div class="col-lg-4">
+                                    <input type="text" name="wdUnit" class="form-control input-sm" value="" onkeypress="return isNumber(event,this)" required/>
+                                </div>
+                                <div style="color:red;" class="col-lg-4">
+                                    * เฉพาะตัวเลยเท่านั้น
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="repID" value="@Request.Params["repID"]" />
+                    <input type="hidden" name="stockID" value="@Request.Params["stockID"]" />
+                    <button type="submit" onclick="return checkValWD()" class="btn btn-default"><i style="color:orange;" class="glyphicon glyphicon-transfer"></i> เบิก</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    var checkValWD = function () {
+        var realUnit = parseInt("@stk.UNIT");
+        var wdUnit = $("[name='wdUnit']");
+        //console.log("realUnit " + realUnit + " wdUnit : "+wdUnit.val());
+        if (realUnit < wdUnit.val()) {
+            alert("จำนวนเบิกมากเกินกว่าจำนวนของที่มีในคลัง");
+            wdUnit.val('');
+            wdUnit.focus();
+
+            return false;
+        } else {
+            return true;
+        }
+    }
+</script>

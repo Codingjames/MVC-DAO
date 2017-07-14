@@ -1,0 +1,145 @@
+﻿@{
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Response.Redirect("~/main");            
+        }
+        else
+        {
+            Response.Redirect("~/Home");
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+    }
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>V-tech Nakhonpanom@(ViewBag.Title!=""?"/"+ViewBag.Title:"")</title>
+    <link rel="icon" href="@Url.Content("~/Content/images/favicon.png")">
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    @*@bundles.Add(new StyleBundle("~/Content/styles/layout.css").Include("~/Content/site.css"));*@
+    <link rel="stylesheet" href="@Url.Content("~/Content/styles/layout.css")" type="text/css" />
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/styles/Bootstrap/css/bootstrap.min.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/styles/Bootstrap/css/bootstrap-theme.min.css")" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/DateTimePicker/jquery.datetimepicker.css")" />
+
+    <script type="text/javascript" src="@Url.Content("~/Content/JS/jquery-3.1.0.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/JS/crmsJS.js")"></script>
+    <script src="@Url.Content("~/Content/DateTimePicker/jquery.js")"></script>
+    <script src="@Url.Content("~/Content/DateTimePicker/build/jquery.datetimepicker.full.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/styles/Bootstrap/js/bootstrap.min.js")"></script>
+   
+</head>
+<body id="top">
+    <div class="wrapper col1">
+        <div id="head">
+            <h1><a href="~/Home/index" style="text-decoration:none;">V-Tech Nakhonpanom</a></h1>
+            <p>บริการซ่อม โน๊ตบุ๊ค คอมฯ ปริ้นเตอร์</p>
+            <div id="topnav">
+                <ul>
+                    <li><a id="main" href="~/Main/Staff">หน้าหลัก</a></li>
+                    <li><a id="services" href="javascript:void(0);">บริการ</a>
+                        <ul>
+                            <li><a id="services" href="~/Services"><i class="glyphicon glyphicon-list-alt"></i> รายการบริการ</a>
+<li><a href="~/Services/Services">ออกใบรับส่งซ่อม</a></li>
+                        </ul>
+                    </li>
+                    <li><a id="user" href="javascript:void(0);">จัดการผู้ใช้</a>
+                        <ul>
+                            <li><a href="~/User/ManageManager">ผู้ดูแลระบบ</a></li>
+                            <li><a href="~/User/ManageEmployees">พนักงาน</a></li>
+                            <li><a href="~/Customer/ManageCustomer">ลูกค้า</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a id="stock" href="javascript:void(0);">คลังอะไหล่</a>
+                        <ul>
+                            <li><a href="~/Requisition/approbationManagement">จัดการการเบิกอะไหล่</a> </li>
+                            <li><a href="~/Stock">คลังอะไหล่</a></li>
+                            <li><a href="~/Stock/StockManagement">จัดการคลังอะไหล่</a></li>
+                            <li><a href="~/Product/ManageProduct">จัดการอุปกรณ์</a></li>
+                        </ul>
+                    </li>
+                    <li class="last"><a id="report" href="javascript:void(0);">รายงาน</a>
+                        <ul>
+                            <li><a href="~/Services/RepairingReportView">รายงานการรับซ่อม</a></li>
+                            <li><a href="~/Requisition/RequisitionReportView">รายงานการเบิกใช้อะไหล่</a></li>
+                            <li><a href="~/User/EmployeesWorkingReportView">รายงานผลงานพนักงาน</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div id="search" style="display:none;">
+                <form action="#" method="post">
+                    <fieldset>
+                        <legend>Site Search</legend>
+                        <input type="submit" name="go" id="go" value="GO" />
+                        <input type="text" value="" onfocus="this.value=(this.value=='Search the site&hellip;')? '' : this.value ;" />
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @RenderBody()
+
+   
+            <!-- End Company Details -->
+            <div id="copyright">
+                <p class="fl_left">Copyright &copy; 2014 - All Rights Reserved - <a href="#">Domain Name</a></p>
+                <p class="fl_right">create by <a target="_blank" href="http://www.jbs-enterprise.byethost5.com/?i=1" title="Free Website Templates">ธ.รลฐพัฐ</a></p>
+                <br class="clear" />
+            </div>
+            <div class="clear"></div>
+      
+</body>
+
+<p id="popup"></p>
+
+</html>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+
+    });
+</script>
+
+<script>
+    $.datetimepicker.setLocale('th');
+
+    /// DateTimePicker
+    $('#datetimepicker').datetimepicker({
+        format: 'd/m/Y H:i',
+        dayOfWeekStart: 1,
+        lang: 'th',
+        //disabledDates: [Date.now(), '1986/01/09', '1986/01/10'],
+        //startDate:	'1986/01/05'
+        startDate: Date.now()
+    });
+    $('#datetimepicker2').datetimepicker({
+        format: 'd/m/Y H:i',
+        dayOfWeekStart: 1,
+        lang: 'th',
+        //disabledDates: ['1986/01/08', '1986/01/09', '1986/01/10'],
+        //startDate:	'1986/01/05'
+        startDate: Date.now()
+    });
+  
+</script>
+<!-- ถ้ามีการส่งพารามิเตอร์ไปค้นหา ให้ Focus ที่ pagination -->
+@if(Request.Params["page"]!=null){
+    <script>
+        //$(".pagination").focus();
+        $('html, body').animate({ scrollTop: $('.pagination').offset().top }, 'slow');
+</script>
+}

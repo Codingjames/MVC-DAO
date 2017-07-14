@@ -1,0 +1,157 @@
+﻿@using CRMS_WEB.Models.beans;
+@using PagedList.Mvc;
+@using PagedList;
+@using CRMS_WEB.Coverts;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "WithdrawParts";
+
+    ConvertClass cv = new ConvertClass();
+
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Layout = "~/Views/Shared/Template_admin.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Layout = "~/Views/Shared/Template_emp.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 3)
+        {
+            Response.Redirect("~/Home");
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+    }
+
+    // รายการข้อมูล Stock
+    var stock = ViewBag.Stock;//as List<StockModel>;
+}
+
+<script>
+    $(document).ready(function () {
+        $("#services").addClass("active");  // add class nav
+    });
+</script>
+
+<div class="wrapper col2">
+    <div id="breadcrumb">
+        <ul>
+            <li class="first">คุณอยู่ที่ </li>
+            <li>&#187;</li>
+            <li><a href="~/Services">บริการ</a></li>
+            <li>&#187;</li>
+            <li class=""><a href="~/Services/RepairDescription?repID=@Request.Params["repID"]">รายละเอียดการซ่อม</a></li>
+            <li>&#187;</li>
+            <li class="current"><a href="javascript:void(0)">การเบิกอะไหล่</a></li>
+
+            <li style="float:right;">
+                <button onclick="goto('../User/UserEditing?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูลส่วนตัว" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-cog"></i> </button>
+                <button onclick="goto('/User/ManagerProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="wrapper col4">
+    <div id="container">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                รายการอะไหล่
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("IssueParts", "Services", FormMethod.Post))
+                {
+                    <p>
+                        <span style="float: left; margin: 5px 0px 0px 0px;">ประเภท, ยี่ห้อ,คารา : </span> @Html.TextBox("SearchText", null, new { @class = "form-control input-sm ", @style = "color:;width:30%;float:left; margin:0px 8px 0px 8px;" })
+                        <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-search"></i> Search</button>
+                        <span style="float:right;"> ทั้งหมด @(Request.Params["SearchText"] != null ? stock.Count : ViewBag.Total)</span>
+                    </p>
+                }
+                <table class="table table-hover">
+                    <thead style="background:#EEE;">
+                        <tr>
+                            <th style="width: 5%; white-space: normal; text-align: center;">#</th>
+                            <th style="width: 10%; white-space: normal; text-align: center;">รหัสอะไหล่</th>
+                            <th style="width:50%;white-space:normal;">รายละเอียด</th>
+                            <th style="width: 10%; white-space: normal; text-align: center;">จำนวน</th>
+                            <th style="width: 15%; white-space: normal; text-align: center;">ราคา/ชิ้น</th>
+                            <th style="width:10%;white-space:normal;text-align:center;">ตัวจัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (stock.Count > 0)
+                        {
+                            int n = 1 + cv.pageToNumrunning(Request.Params["page"] != null ? Int32.Parse(Request.Params["page"]) : 0, 20); 
+                            foreach (var stk in stock)
+                            {
+                                <tr>
+                                    <td align="right">@n</td>
+                                    <td align="right">@stk.STOCK_ID</td>
+                                    <td>@(stk.PART.TYPE.PART_TYPE_NAME + " " + stk.PART.BRAND.PART_BRAND_NAME + " " + stk.STOCK_INFO)</td>
+                                    <td align="right">@stk.UNIT</td>
+                                    <td align="right">@stk.PRICE.ToString("00,00")</td>
+                                    <td align="center">
+                                        <button onclick="withdrawAdding(@Request.Params["repID"],@stk.STOCK_ID)" class="btn btn-default btn-sm" data-toggle="tooltip" title="" data-original-title="ทำรายการเเบิก">
+                                            <i style="color:orange;" class="glyphicon glyphicon-transfer"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                n++;
+                            }
+                            if (n > 20)
+                            {
+                                <tr>
+                                    <td colspan="8" style="text-align:center;">
+                                        <!-- ลิ้งเพจ -->
+                                        @Html.PagedListPager((IPagedList)ViewBag.Stock, page => Url.Action("IssueParts", "Services", new { page }))
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else if (stock.Count < 1 && Request.Params["SearchText"] != null)
+                        {
+                            <tr>
+                                <td colspan="6" style="color:red;text-align:center;font-size:18px;">
+                                   " @Request.Params["SearchText"] " ไม่พบข้อมูลที่ค้นหา
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" style="color:red;text-align:center;font-size:18px;">
+                                    ไม่มีข้อมูล
+                                </td>
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var withdrawAdding = function(repID,stockID){
+        $("#popup").load("../Services/WithdrawPartsAdding_popup", { "repID": repID, "stockID": stockID }, function (data) {
+            console.log(data);
+            $("#withdraw").modal("show");
+        });
+    }
+
+</script>

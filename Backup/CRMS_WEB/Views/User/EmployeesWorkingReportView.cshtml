@@ -1,0 +1,156 @@
+﻿@using CRMS_WEB.Models.beans;
+@using CRMS_WEB.Coverts;
+@using PagedList.Mvc;
+@using PagedList;
+@{
+    ViewBag.Title = "EmployeesWorkingReportView";
+
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Layout = "~/Views/Shared/Template_admin.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Response.Redirect("~/Home");
+        }
+        else if ((int)Session["PRIO"] == 3)
+        {
+            Response.Redirect("~/Home");
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+        // HttpResponse.Redirecting = "";
+    }
+    ConvertClass cv = new ConvertClass();
+}
+<script>
+    $(document).ready(function () {
+        $("#report").addClass("active");  // add class nav
+    });
+</script>
+
+
+<div class="wrapper col2">
+    <div id="breadcrumb">
+        <ul>
+            <li class="first">คุณอยู่ที่ </li>
+            <li>&#187;</li>
+            <li><a href="#">รายงาน</a></li>
+            <li>&#187;</li>
+            <li class="current"><a href="#">รายงานผลงานของพนักงาน</a></li>
+
+            <li style="float:right;">
+                <button onclick="goto('../User/UserEditing?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูลส่วนตัว" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-cog"></i> </button>
+                @if ((int)Session["PRIO"] == 1)
+                {
+                    <button onclick="goto('/User/ManagerProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+                }
+                else if ((int)Session["PRIO"] == 2)
+                {
+                    <button onclick="goto('/User/EmployeeProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+                }
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+
+        </ul>
+    </div>
+</div>
+
+
+<div class="wrapper col4">
+    <div id="container">
+        <h3>
+            รายการ
+            <small style="float:right;">
+                <form action="~/User/EmployeesWorkingReportView" method="post" class="form-inline" autocomplete="off">
+                    <div class="form-group">
+                        <label for="inputsm" style="font-size:18px;">เลือกเดือน :</label>
+
+                        <input type="month" class="form-control" name="month" value="@(Request.Params["month"]!=null?Request.Params["month"]:"")" id="mth" required/>
+
+                    </div>
+                    <button class="btn btn-info btn-sm"><i class="glyphicon glyphicon-search"></i> ค้นข้อมูล</button>
+                </form>
+            </small>
+        </h3>
+        @if (Request.Params["month"] != null)
+        {
+            var user = ViewBag.USER ;//as List<UsersModel>;
+
+            <table class="table table-hover">
+                <thead>
+                    <tr style="background:#EEE;">
+                        <th rowspan="2" style="width:5%;white-space:nowrap;text-align:center;vertical-align:middle;">#</th>
+                        <th rowspan="2" style=" width: 10%; white-space: nowrap; text-align: center; vertical-align: middle;">รหัสประจำตัว</th>
+                        <th rowspan="2" style=" width: 20%; white-space: nowrap; text-align: center; vertical-align: middle;">ชื่อ-สกุล</th>
+                        <th colspan="5" style="width: 65%; white-space: nowrap; text-align: center; vertical-align: middle;">สถานะรายการซ่อม</th>
+                    </tr>
+                    <tr style="background:#EEF;">
+                        <th>รอซ่อม</th>
+                        <th>กำลังซ่อม</th>
+                        <th>ซ่อมเสร็จ</th>
+                        <th>ซ่อมไม่ได้</th>
+                        <th>ทั้งหมด</th>
+                    </tr>
+                </thead>
+                @if (user.Count > 0)
+                {
+                    <tbody>
+                        @{int n = 1+cv.pageToNumrunning(Request.Params["page"] != null ? Int32.Parse(Request.Params["page"]) : 0, 20);
+                        }
+
+                        @foreach (var u in user)
+                        {
+                            <tr>
+                                <td align="center">@n</td>
+                                <td >@u.USER_UID</td>
+                                <td >@(u.NAME+" "+u.LASTNAME)</td>
+                                <td>@u.REPAIR.WAIT_REP</td>
+                                <td>@u.REPAIR.NOW_REP</td>
+                                <td>@u.REPAIR.SUCCESS_REP</td>
+                                <td>@u.REPAIR.CANNOT_REP</td>
+                                <td>@(u.REPAIR.CANNOT_REP+u.REPAIR.SUCCESS_REP+u.REPAIR.WAIT_REP+u.REPAIR.NOW_REP)</td>
+                            </tr>
+                            
+                            n++;
+                        }
+                    </tbody>
+                    <tfoot>
+                        @if(n>20)
+                        {
+                            <tr>
+                                <td align="right" colspan="9" style="color:red;">
+                                    @Html.PagedListPager((IPagedList)ViewBag.USER, page => Url.Action("EmployeesWorkingReportView", "User", new { page = page, month = Request.Params["month"] }))
+                                </td>
+                            </tr>
+                        }
+                        <tr style="background:#EEE;">
+                            <td align="center" colspan="9" style="color:red;">
+                               <a href="~/User/ExportEmployeesWorkingReport?month=@Request.Params["month"]" target="_blank" class="btn btn-default btn-sm" data-toggle="tooltip" data-original-title="พิมพ์รายงาน" ><i class="glyphicon glyphicon-print"></i> พิมพ์รายงาน</a>
+                            </td>
+                        </tr>
+                    </tfoot>
+                }
+                else
+                {
+                    <tr>
+                        <td align="center" colspan="9" style="color:red;">
+                            <b>ไม่มีข้อมูล</b>
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+
+</div>

@@ -1,0 +1,30 @@
+﻿@using CRMS_WEB.Models.beans;
+@{
+    var data = ViewBag.REQ as RequisitionModel;
+}
+
+<div class="modal fade" id="approbation" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">การอนุมัติ</h4>
+            </div>
+            @using (Html.BeginForm("Approbation_popupUpdate", "Requisition", FormMethod.Post))
+            {
+            <div class="modal-body">
+                <select name="approve" class="form-control">
+                    <option value="allow" selected="@data.APROVE.Equals("allow")">อนุมัติ</option>
+                    <option value="wait" selected="@data.APROVE.Equals("wait")">รออนุมัติ</option>
+                    <option value="not" selected="@data.APROVE.Equals("not")">ไม่อนุมัติ</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" name="repID" value="@data.REPAIR_NO.REPAIR_NO" />
+                <button type="submit" name="reqID" value="@data.REQ_ID" class="btn btn-default" ><i style="color:green;" class="glyphicon glyphicon-save"></i> บันทึก</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+            }
+        </div>
+    </div>
+</div>

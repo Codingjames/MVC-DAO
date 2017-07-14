@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="WorkingDataSet" targetNamespace="http://tempuri.org/WorkingDataSet.xsd" xmlns:mstns="http://tempuri.org/WorkingDataSet.xsd" xmlns="http://tempuri.org/WorkingDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="WorkingDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="WorkingDataSet" msprop:Generator_UserDSName="WorkingDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="EmpWorking" msprop:Generator_TableClassName="EmpWorkingDataTable" msprop:Generator_TableVarName="tableEmpWorking" msprop:Generator_TablePropName="EmpWorking" msprop:Generator_RowDeletingName="EmpWorkingRowDeleting" msprop:Generator_RowChangingName="EmpWorkingRowChanging" msprop:Generator_RowEvHandlerName="EmpWorkingRowChangeEventHandler" msprop:Generator_RowDeletedName="EmpWorkingRowDeleted" msprop:Generator_UserTableName="EmpWorking" msprop:Generator_RowChangedName="EmpWorkingRowChanged" msprop:Generator_RowEvArgName="EmpWorkingRowChangeEvent" msprop:Generator_RowClassName="EmpWorkingRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="UID" msprop:Generator_ColumnVarNameInTable="columnUID" msprop:Generator_ColumnPropNameInRow="UID" msprop:Generator_ColumnPropNameInTable="UIDColumn" msprop:Generator_UserColumnName="UID" type="xs:string" minOccurs="0" />
+              <xs:element name="NAME" msprop:Generator_ColumnVarNameInTable="columnNAME" msprop:Generator_ColumnPropNameInRow="NAME" msprop:Generator_ColumnPropNameInTable="NAMEColumn" msprop:Generator_UserColumnName="NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="WAIT" msprop:Generator_ColumnVarNameInTable="columnWAIT" msprop:Generator_ColumnPropNameInRow="WAIT" msprop:Generator_ColumnPropNameInTable="WAITColumn" msprop:Generator_UserColumnName="WAIT" type="xs:string" minOccurs="0" />
+              <xs:element name="NOW" msprop:Generator_ColumnVarNameInTable="columnNOW" msprop:Generator_ColumnPropNameInRow="NOW" msprop:Generator_ColumnPropNameInTable="NOWColumn" msprop:Generator_UserColumnName="NOW" type="xs:string" minOccurs="0" />
+              <xs:element name="SUCCESS" msprop:Generator_ColumnVarNameInTable="columnSUCCESS" msprop:Generator_ColumnPropNameInRow="SUCCESS" msprop:Generator_ColumnPropNameInTable="SUCCESSColumn" msprop:Generator_UserColumnName="SUCCESS" type="xs:string" minOccurs="0" />
+              <xs:element name="CANNOT" msprop:Generator_ColumnVarNameInTable="columnCANNOT" msprop:Generator_ColumnPropNameInRow="CANNOT" msprop:Generator_ColumnPropNameInTable="CANNOTColumn" msprop:Generator_UserColumnName="CANNOT" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

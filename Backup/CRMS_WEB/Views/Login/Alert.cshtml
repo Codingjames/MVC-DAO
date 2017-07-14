@@ -1,0 +1,8 @@
+﻿@{
+    ViewBag.Title = "Alert";
+}
+
+<script>
+    alert("@Request.Params["msg"]");
+    window.location = "@Request.Params["link"]";
+</script>

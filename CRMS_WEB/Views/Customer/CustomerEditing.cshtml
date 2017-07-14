@@ -1,0 +1,149 @@
+﻿@using CRMS_WEB.Models.beans;
+@{
+    ViewBag.Title = "CustomerEditing";
+
+
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Layout = "~/Views/Shared/Template_admin.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Layout = "~/Views/Shared/Template_emp.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 3)
+        {
+            Response.Redirect("~/Home");
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+        // HttpResponse.Redirecting = "";
+    }
+
+    //data
+    var cust = ViewBag.CUST as CustomerModel;
+}
+<script>
+    $(document).ready(function () {
+        $("#user").addClass("active");
+    });
+</script>
+<div class="wrapper col2">
+    <div id="breadcrumb">
+        <ul>
+            <li class="first">คุณอยู่ที่ </li>
+            <li>&#187;</li>
+            <li><a>จัดการผู้ใช้</a></li>
+            <li>&#187;</li>
+            <li><a href="~/Customer/ManageCustomer">การจัดการลูกค้า</a></li>
+            <li>&#187;</li>
+            <li class="current"><a>แก้ไขข้อมูลลูกค้า</a></li>
+
+            <li style="float:right;">
+                <button onclick="goto('../User/UserEditing?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูลส่วนตัว" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-cog"></i> </button>
+                @if ((int)Session["PRIO"] == 1)
+                {
+                    <button onclick="goto('/User/ManagerProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+                }
+                else if ((int)Session["PRIO"] == 2)
+                {
+                    <button  onclick="goto('/User/EmployeeProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+                }
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="wrapper col4">
+    <div id="container">
+        <div id="content">
+            <h1>แก้ไขข้อมูลลูกค้า</h1>
+            <div class="col-lg-12">
+
+                <!--                  Form                    -->
+                <form action="~/Customer/CustomerUpdating" method="post" class="form-horizontal">
+
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-4 control-label">Username</label>
+                        <div class="col-sm-4">
+                            <input type="text" name="username" class="form-control input-sm" value="@cust.USERNAME" onblur="isDuplicateUser(this)" placeholder="JAME1234" readonly>    <!--    Username      -->
+                        </div>
+                        @*<div class="col-sm-4">
+                                <span id="dupLD"></span>
+                                <span id="dupMSG">4 ตัวอักษรขึ้นไป</span>
+                            </div>*@
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-4 control-label">ชื่อ</label>
+                        <div class="col-sm-4">
+                            <input type="text" name="name" value="@cust.C_NAME" class="form-control input-sm" id="inputEmail3" placeholder="รัฐพล" required>    <!--    ชื่อลูกค้า      -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-4 control-label">สกุล</label>
+                        <div class="col-sm-4">
+                            <input type="text" name="lname" value="@cust.C_LASTNAME" class="form-control input-sm" id="inputEmail3" placeholder="ธนครุฑ" required>    <!--    นามสกุล      -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-4 control-label">เบอร์โทร</label>
+                        <div class="col-sm-4">
+                            <input type="tel" name="tel" value="@cust.C_TEL" class="form-control input-sm" maxlength="10" onkeypress="return isNumberStr(event,this)" id="inputEmail3" placeholder="0872361601" required>    <!--    เบอร์      -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-4 control-label">อีเมล</label>
+                        <div class="col-sm-6">
+                            <input type="email" name="email" value="@cust.C_EMAIL" class="form-control input-sm" id="inputEmail3" placeholder="Email" required>    <!--    เมล      -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-4 control-label">ที่อยู่</label>
+                        <div class="col-sm-6">
+                            <textarea name="addr" class="form-control input-sm" id="inputEmail3" style="resize:none;" placeholder="131 หมู่ 1 ต ท่าอุเทน อ.ท่าอุเทน จ.นครพนม 48120 " required>@cust.C_ADDRESS</textarea>    <!--    ที่อยู่      -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <hr />
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-sm-4 control-label">รหัสผ่านใหม่</label>
+                        <div class="col-sm-4">
+                            <input type="password" name="password" class="form-control input-sm" id="password" value="">    <!--    Password      -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-4 control-label">ยืนยันรหัสผ่านใหม่</label>
+                        <div class="col-sm-4">
+                            <input type="password" class="form-control input-sm" id="conpassword" value="">    <!--   Confirm  Password      -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <center>
+                                <input type="hidden" name="custID" value="@cust.CUST_NO" />
+                                <button type="submit" onclick="return newPwdCheck('password', 'conpassword')" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-save" style="color:green;"></i> บันทึก</button>  <!--    ปุม submit      -->
+                                <button type="reset" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-refresh" style="color:deepskyblue;"></i> ล้างข้อมูล</button>  <!--     ปุ่ม รีเซ็ต    -->
+                            </center>
+                        </div>
+                    </div>
+
+                </form> <!-- /form      -->
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+

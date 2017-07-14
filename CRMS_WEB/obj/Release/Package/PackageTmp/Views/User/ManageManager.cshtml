@@ -1,0 +1,131 @@
+﻿@using System.Globalization;
+@using CRMS_WEB.Models.beans;
+@{
+    ViewBag.Title = "ManageManager";
+
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Layout = "~/Views/Shared/Template_admin.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Response.Redirect("~/Home");
+        }
+        else if ((int)Session["PRIO"] == 3)
+        {
+            Response.Redirect("~/Home");
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+        // HttpResponse.Redirecting = "";
+    }
+
+
+    var listUsr = ViewData["USERS"] as List<UsersModel>;
+}
+<script>
+    $(document).ready(function () {
+        $("#user").addClass("active");
+    });
+
+</script>
+<div class="wrapper col2">
+    <div id="breadcrumb">
+        <ul>
+            <li class="first">คุณอยู่ที่ </li>
+            <li>&#187;</li>
+            <li><a>จัดการผู้ใช้</a></li>
+            <li>&#187;</li>
+            <li class="current"><a>การจัดการผู้ดูแลระบบ</a></li>
+
+            <li style="float:right;">
+                <button onclick="goto('../User/UserEditing?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูลส่วนตัว" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-cog"></i> </button>
+                @if ((int)Session["PRIO"] == 1)
+                {
+                    <button onclick="goto('/User/ManagerProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+                }
+                else if ((int)Session["PRIO"] == 2)
+                {
+                    <button onclick="goto('/User/EmployeeProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+                }
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="wrapper col4">
+    <div id="container">
+        <h1>
+            การจัดการผู้ดูแลระบบ
+            <a href="~/User/AddManager" class="btn btn-default btn-sm" style="float:right;"><i class="glyphicon glyphicon-plus-sign"></i> เพิ่มผู้ดูแล</a>
+        </h1>
+
+        <table class="table">
+            <thead>
+                <tr style="background:#EEE;">
+                    <th width="60px">ลำดับ </th>
+                    <th width="120px"> รหัสผู้ใช้ </th>
+                    <th width="150px"> ชื่อ-สกุล</th>
+                    <th> เบอร์ </th>
+                    <th> วันเริ่มงาน</th>
+                    <th width="80px"> เงินเดือน </th>
+                    <th width="160px"> ตัวจัดการ </th>
+                </tr>
+            </thead>
+            @if (listUsr.Count > 0)
+            {
+              
+                string i_am = "";
+                int i = 1;
+                foreach (var u in listUsr)
+                {
+                    
+                    i_am = u.USER_NO == (int)Session["ID"] ? "#C2E3F3" : "";
+                    <tr style="background:@i_am;">
+                        <td align="right">@i</td>
+                        <td> @u.USER_UID</td>
+                        <td> @(u.NAME + " " + u.LASTNAME) </td>
+                        <td> @u.TEL</td>
+                        <td> @u.START_WORK.ToString("d-MM-yyyy")</td>
+                        <td align="right"> @Int32.Parse(u.SALARY).ToString("00,00")</td>
+                        <td align="center">
+                            @if (u.USER_NO != (int)Session["ID"])
+                            {
+                                <button onclick="ConfirmDel('../User/UserDeleting?who=Manager&userID=@u.USER_NO')" class="btn btn-danger btn-sm" data-toggle="tooltip" title="ลบข้อมูล"><i class="glyphicon glyphicon-trash"></i></button>
+                            }
+                            @if (u.USER_NO == (int)Session["ID"])
+                            {
+                                <button onclick="goto('../User/UserEditing?who=Manager&userID=@u.USER_NO')" class="btn btn-warning btn-sm" data-toggle="tooltip" title="แก้ไขข้อมูล"> <i class="glyphicon glyphicon-edit"></i></button>
+                            }
+                            <button onclick="goto('../User/ManagerProfile?userID=@u.USER_NO')" class="btn btn-default btn-sm" data-toggle="tooltip" title="ข้อมูลโดยละเอียด"> เพิ่มเติม..</button>
+                        </td>
+                    </tr>
+                            i++;
+                }
+
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7">
+                        <center><b style="color:red;">ไม่มีข้อมูล</b> </center>
+                    </td>
+                </tr>
+            }
+        </table>
+
+
+
+        <div class="clear"></div>
+    </div>
+</div>

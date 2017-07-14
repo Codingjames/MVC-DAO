@@ -1,0 +1,144 @@
+﻿@using CRMS_WEB.Models.beans;
+@{                                                                                                   @* จัดการอุปกรณ์ *@
+    ViewBag.Title = "ManageProduct";
+    
+    if(Session["PRIO"] != null)
+    {
+        if((int)Session["PRIO"] == 1)
+        {
+            Layout = "~/Views/Shared/Template_admin.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Layout = "~/Views/Shared/Template_emp.cshtml";
+        }
+        else
+        {
+            Response.Redirect("~/Home");
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+    }
+}
+<script>
+    $(document).ready(function () {
+        $("#stock").addClass("active");
+    });
+</script>
+<div class="wrapper col2">
+    <div id="breadcrumb">
+        <ul>
+            <li class="first">คุณอยู่ที่ </li>
+            <li>&#187;</li>
+            <li class="current"><a href="#">จัดการอุปกรณ์</a></li>
+
+            <li style="float:right;">
+                <button onclick="goto('../User/UserEditing?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูลส่วนตัว" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-cog"></i> </button>
+                <button onclick="goto('/User/ManagerProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="wrapper col4">
+    <div id="container">
+        <div id="content">
+            <!-- head title -->
+            <h1>
+                จัดการอุปกรณ์ที่รับซ่อม 
+                <small style="float:right">
+                    <button onclick="goto('../Product/ProductTypeManagement')" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-wrench"></i> จัดการอุปกรณ์</button> <!-- ปุ่มจัดการอุปกณ์ -->
+                </small>
+            </h1>
+            <form action="~/Product/addProduct" method="post">
+                <div class="col-lg-12" >
+                    @foreach (var data in ViewData["PRODUCT_TYPE"] as List<ProductTypeModel>)
+                    {
+                        <div class="col-lg-3">
+                            <label for="T@(data.PRO_TYP_ID)"><input type="radio" id="T@(data.PRO_TYP_ID)" name="protype_id" value="@data.PRO_TYP_ID" /> @data.PRO_TYPE_NAME</label>
+                        </div>
+                    }
+                </div>
+                <br />
+                <br />
+
+                <h1 id="hh" style="display:none;">Brand</h1>
+                <!---============ Load data on click ==============-->
+                <div id="brandLoader" class="col-lg-12">
+                    <!--- Data =-->
+                </div>
+
+            </form>
+        </div>
+        <!-- --------------------------------------------------------*------------------->
+        <!--แทปด้านซ้ายมือ ------------------------------------------------------------------>
+        <div id="column">
+            <div id="featured">
+                <ul>
+                    <li>
+                        <h2 style="margin-bottom:10px;">เพิ่มประเภทอุปกรณ์</h2>
+
+                        <form action="~/Product/AddProductType" class="form-group" method="post">
+                            <label for="protype_name">Category name</label>
+                            <input type="text" name="protype_name" value="" class="form-control input-sm"  required/><br />
+
+                            <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-plus"></i> เพิ่ม</button>
+                            <button type="reset" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-refresh"></i> คืนค่า</button>
+                        </form>
+
+                    </li>
+                </ul>
+            </div>
+
+
+            <div id="featured">
+                <ul>
+                    <li>
+                        <h2 style="margin-bottom:10px;">
+                        เพิ่มยี่ห้ออุปกรณ์
+                            <small style="float:right;">
+                                <button onclick="goto('../Product/ProductBrandManagement')" class="btn btn-default btn-sm" ><i class="glyphicon glyphicon-wrench"></i> จัดการยี่ห้อ</button>
+                            </small>
+                        </h2>
+
+                        <form action="~/Product/AddProductBrand" class="form-group" method="post">
+                            <label for="probrand_name">Brand name</label>
+                            <input type="text" name="probrand_name" value="" class="form-control input-sm" /><br />
+
+                            <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-plus"></i> เพิ่ม</button>
+                            <button type="reset" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-refresh"></i> คืนค่า</button>
+                        </form>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("[type='radio']").click(function () {
+            var id = $(this).val();
+            $.post("ManageProduct_DataLoading", { "typeID": id }, function (re, st) {
+                if(st === "success")
+                {
+                    $("#hh").show();
+                }
+                $("#brandLoader").html(re);
+               
+            });
+        });
+
+    });
+</script>

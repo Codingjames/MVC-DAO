@@ -1,0 +1,165 @@
+﻿@using CRMS_WEB.Models.beans;
+@using PagedList.Mvc;
+@using PagedList;
+@using CRMS_WEB.Coverts;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Index";
+    ConvertClass cv = new ConvertClass();
+
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Layout = "~/Views/Shared/Template_admin.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Layout = "~/Views/Shared/Template_emp.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 3)
+        {
+            Response.Redirect("~/Home");
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+        // HttpResponse.Redirecting = "";
+    }
+    // รายการข้อมูล
+    var stk = ViewBag.Stock;// as List<StockModel>;
+}
+<script>
+    $(document).ready(function () {
+        $("#stock").addClass("active");  // add class nav
+    });
+</script>
+<div class="wrapper col2">
+    <div id="breadcrumb">
+        <ul>
+            <li class="first">คุณอยู่ที่ </li>
+            <li>&#187;</li>
+            <li class="current"><a href="#">คลังอะไหล่</a></li>
+
+            <li style="float:right;">
+                <button onclick="goto('../User/UserEditing?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูลส่วนตัว" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-cog"></i> </button>
+                <button onclick="goto('/User/ManagerProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="wrapper col4">
+    <div id="container">
+
+        <h3>
+            รายการอะไหล่
+            <small style="float:right;">
+                <button onclick="stockAddingPopup()" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-plus-sign"></i> เพิ่มข้อมูลคลังอะไหล่</button>
+            </small>
+        </h3>
+
+        @using (Html.BeginForm("", "Stock", FormMethod.Post, new { @style = "form-inline" }))
+        {
+            <p>
+                <div>
+                </div>
+                <span style="float: left; margin: 5px 0px 0px 0px;"> รหัส, ประเภท, ยี่ห้อ,ราคา : </span>
+                @Html.TextBox("SearchText", Request.Params["SearchText"] != null ? Request.Params["SearchText"] : "", new { @class = "form-control input-sm ", @style = "color:;width:30%;float:left; margin:0px 8px 0px 8px;" })
+                <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-search"></i> Search</button>
+                <span style="float:right;"> ทั้งหมด @stk.Count</span>
+            </p>
+        }
+        <table class="table">
+            <thead style="background:#EEE;">
+                <tr>
+                    <th style="width:20px;white-space:nowrap;text-align:right;"># </th>
+                    <th style="width:40px; white-space: nowrap; text-align: right;">รหัส</th>
+                    <th style="width:120px;white-space:nowrap;">ประเภท</th>
+                    <th style="width:140px;white-space:nowrap;">ยี่ห้อ</th>
+                    <th style="width:190px;white-space:nowrap;">ข้อมูล</th>
+                    <th style="width:40px;white-space:nowrap;">จำนวน</th>
+                    <th style="width:80px;white-space:nowrap;">ราคา/หน่วย</th>
+                    <th style="text-align:center;width:100px;white-space:nowrap;">ตัวจัดการ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (stk.Count > 0)
+                {
+                    int n = 1 + cv.pageToNumrunning(Request.Params["page"] != null ? Int32.Parse(Request.Params["page"]) : 0, 20); 
+                    foreach (var stock in stk)
+                    {
+                        <tr>
+                            <td>@n</td>
+                            <td>@stock.STOCK_ID</td>
+                            <td>@stock.PART.TYPE.PART_TYPE_NAME</td>
+                            <td>@stock.PART.BRAND.PART_BRAND_NAME</td>
+                            <td>@stock.STOCK_INFO</td>
+                            <td align="right">@stock.UNIT</td>
+                            <td align="right">@stock.PRICE.ToString("##,##")</td>
+                            <td align="center">
+                                <button onclick="ConfirmDel('../Stock/StockDeleting?stockID=@stock.STOCK_ID')" class="btn btn-default btn-sm" data-toggle="tooltip" title="" data-original-title="ลบข้อมูล"><i style="color:red;" class="glyphicon glyphicon-trash"></i></button>
+                                <button onclick="stockEdetingPopup(@stock.STOCK_ID)" class="btn btn-default btn-sm" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูล"><i style="color:orange;" class="glyphicon glyphicon-edit"></i></button>
+                            </td>
+                        </tr>
+                        n++;
+                    }
+                <tr>
+                    <td colspan="8" style="text-align:center;">
+                        <!-- ลิ้งเพจ -->
+                        @Html.PagedListPager((IPagedList)ViewBag.Stock, page => Url.Action("Index", "Stock", new { page }))
+                    </td>
+                </tr>
+                      
+
+            }
+            @* ถ้าค้นหาแล้วไม่เจอ  *@
+            else if (Request.Params["SearchText"] != null && stk.Count == 0)
+            {
+                <tr>
+                    <td colspan="8" style="text-align:center;font-weight:bold;color:orange;">ไม่พบข้อมูลที่ค้นหา</td>
+                </tr>
+            }
+            @* ถ้าไม่มีข้อมูลเลย  *@
+            else
+            {
+                <tr>
+                    <td colspan="8" style="text-align:center;font-weight:bold;color:red;">ไม่มีข้อมูล</td>
+                </tr>
+            }
+
+
+            </tbody>
+
+        </table>
+        <div class="clear"></div>
+    </div>
+</div>
+<script>
+    var stockEdetingPopup = function (stockID) {
+        $("#popup").load("../Stock/stockEdeting_Popup", {"stockID":stockID},function(data,status){
+            if (status==="success")
+            {
+                $("#stockEdeting_Popup").modal({ backdrop: 'static', keyboard: false });
+            }
+        });
+    }
+    //ป๊อบอัพการเพิ่ม stock
+    var stockAddingPopup = function () {
+        $("#popup").load("../Stock/StockAdding_Popup", function (data, status) {
+            if (status == "success") {
+                $("#StockAdding_Popup").modal({ backdrop: 'static', keyboard: false });
+            }
+        });
+    }
+</script>

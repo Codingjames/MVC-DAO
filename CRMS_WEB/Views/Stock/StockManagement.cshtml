@@ -1,0 +1,143 @@
+﻿@using CRMS_WEB.Models.beans;
+
+@{
+    ViewBag.Title = "StockManagement";
+
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Layout = "~/Views/Shared/Template_admin.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Layout = "~/Views/Shared/Template_emp.cshtml";
+        }
+        else
+        {
+            Response.Redirect("~/Home");
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+    }
+}
+
+<script>
+    $(document).ready(function () {
+        $("#stock").addClass("active");
+    });
+</script>
+
+<div class="wrapper col2">
+    <div id="breadcrumb">
+        <ul>
+            <li class="first">คุณอยู่ที่ </li>
+            <li>&#187;</li>
+            <li class="current"><a href="#">จัดการคลังอะไหล่</a></li>
+
+            <li style="float:right;">
+                <button onclick="goto('../User/UserEditing?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูลส่วนตัว" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-cog"></i> </button>
+                <button onclick="goto('/User/ManagerProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="wrapper col4">
+    <div id="container">
+        <div id="content">
+            <!-- Header Title -->
+            <h1>
+                จัดการอะไหล่
+                <small style="float:right;">
+                    <button onclick="goto('../Stock/PartsTypeManagement')" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-wrench"></i> จัดการชนิดอะไหล่</button>
+                </small>
+            </h1>
+            <form action="~/Stock/PartsInserting" method="post">
+                <div class="col-lg-12">
+                    @foreach (var data in ViewBag.PartsType as List<PartsTypeModel>)
+                    {
+                        <div class="col-lg-3 radio" style="margin-top:0px;">
+                            <label for="T@(data.PART_TYPE_ID)"><input type="radio" id="T@(data.PART_TYPE_ID)" name="partsTypeID" value="@data.PART_TYPE_ID" /> @data.PART_TYPE_NAME</label>
+                        </div>
+                    }
+                </div>
+                <br />
+                <br />
+
+                <h1 id="hh" style="display:none;">ยี่ห้ออะไหล่</h1>
+                <!---============ Load data on radio check   ==============-->
+                <div id="brandLoader" class="col-lg-12">
+                    <!--- Data =-->
+                </div>
+            </form>
+
+        </div>
+        <!-- --------------------------------------------------------*------------------->
+        <!--แทปด้านซ้ายมือ ------------------------------------------------------------------>
+        <div id="column">
+            <div id="featured">
+                <ul>
+                    <li>
+                        <h2 style="margin-bottom:10px;">เพิ่มชนิดอะไหล่</h2>
+
+                        @using (Html.BeginForm("PartsTypeInserting", "Stock", FormMethod.Post, new { @class = "form-group" }))
+                        {
+                            <label for="protype_name">ชนิดอะไหล่</label>
+                            <input type="text" name="partsType_name" value="" class="form-control input-sm" required /><br />
+                            <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-plus"></i> บันทึก</button>
+                            <button type="reset" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-refresh"></i> คืนค่า</button>
+                        }
+                    </li>
+                </ul>
+            </div>
+
+
+            <div id="featured">
+                <ul>
+                    <li>
+                        <h2 style="margin-bottom:10px;">
+                            เพิ่มยี่ห้อ 
+                            <small style="float:right;">
+                                <button onclick="goto('../Stock/PartsBrandManagement')" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-wrench"></i> จัดการ</button>
+                            </small>
+                        </h2>
+                        @using (Html.BeginForm("PartsBrandInserting", "Stock", FormMethod.Post, new { @class = "form-group" }))
+                        {
+                            <label for="probrand_name">ยี่ห้อ</label>
+                            <input type="text" name="partsbrand_name" value="" class="form-control input-sm" /><br />
+                            <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-plus"></i> บันทึก</button>
+                            <button type="reset" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-refresh"></i> คืนค่า</button>
+                        }
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("[type='radio']").click(function () {
+            var id = $(this).val();
+            $.post("StockManagement_DataLoading", { "typeID": id }, function (data, status) {
+                if (status === "success") {
+                    $("#hh").show();
+                }
+                $("#brandLoader").html(data);
+
+            });
+        });
+
+    });
+</script>

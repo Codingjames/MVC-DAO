@@ -1,0 +1,155 @@
+﻿@using CRMS_WEB.Models.beans;
+@{
+    ViewBag.Title = "Profile";
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Response.Redirect("~/Main/Staff");
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Response.Redirect("~/Main/Staff");
+        }
+        else if ((int)Session["PRIO"] == 3)
+        {
+            Layout = "~/Views/Shared/Template_cust.cshtml";
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+        // HttpResponse.Redirecting = "";
+    }
+    
+    // data 
+    var c = ViewBag.C as CustomerViewModel;
+}
+<script>
+    $(document).ready(function () {
+        $("#profile").addClass("active");
+    });
+</script>
+<div class="wrapper col2">
+
+    <div id="breadcrumb">
+        <ul>
+            <li class="first">
+                <a href="#">
+                    <i class="glyphicon glyphicon-bell"></i>
+                    การแจ้งเตือน <span class="badge" id="alertBell"></span>
+                </a>
+            </li>
+            <li>&nbsp;</li>
+            <li>
+                <a href="#">
+                    <i class="glyphicon glyphicon-envelope"></i>
+                    ข้อความระบบ <span class="badge" id="badgeMSG"></span>
+                </a>
+            </li>
+
+            <li style="float:right;">
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="wrapper col4">
+    <div id="container">
+        <div class="panel panel-info">
+            <div class="panel-heading" style="height:53px;">
+                <b style="font-size:20px;">ข้อมูลส่วนตัว</b>
+               <button onclick="goto('../Customer/MyProfileEditing?c=@(Session["ID"])')" style="float:right;" class="btn btn-default btn-sm" data-toggle="tooltip" data-original-title="แก้ไขข้อมูลส่วนตัว"><i class="glyphicon glyphicon-cog"></i></button>
+            </div>
+            <div class="panel-body">
+                
+                <table class="table">
+                    <tr>
+                        <td colspan="2">
+                            <b>สมัครสมาชิกวันที่ : </b> @c.CUSTOMER.CUST_REG.ToString("d MMMM yyyy")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:50%;">
+                            <label style="color:#000000;">รายละเอียด :</label>
+                            <table class="table">
+                                <tr>
+                                    <td align="right" style="width:150px;"><b>รหัสสมาชิก</b></td>
+                                    <td style="border-right:2px solid lightblue;">@c.CUSTOMER.CUST_UID</td>
+                                </tr>
+                                <tr>
+                                    <td align="right"><b>ชื่อ - สกุล</b></td>
+                                    <td style="border-right:2px solid lightblue;">@(c.CUSTOMER.C_NAME + " " + c.CUSTOMER.C_LASTNAME)</td>
+                                </tr>
+                                <tr>
+                                    <td align="right"><b>ที่อยู่</b></td>
+                                    <td style="border-right:2px solid lightblue;">@c.CUSTOMER.C_ADDRESS</td>
+                                </tr>
+                                <tr>
+                                    <td align="right"><b>เบอร์โทรศัพท์</b></td>
+                                    <td style="border-right:2px solid lightblue;">@c.CUSTOMER.C_TEL</td>
+                                </tr>
+                                <tr>
+                                    <td align="right"><b>อีเมล</b></td>
+                                    <td style="border-right:2px solid lightblue;">@c.CUSTOMER.C_EMAIL</td>
+                                </tr>
+                            </table>
+
+                        </td>
+                        <td>
+                            <label style="color:#000000;">ประวัติการรับบริการ</label><br />
+                            <table class="table">
+                                <tr>
+                                    <td align="right" style="width:150px;"><b>ทั้งหมด</b></td>
+                                    <td>: @(c.WAIT_REP + c.NOW_REP + c.SUCCESS_REP + c.CANNOT_REP)</td>
+                                </tr>
+                                <tr>
+                                    <td align="right" style="width:150px;"><b>สำเร็จ</b></td>
+                                    <td>: @c.SUCCESS_REP</td>
+                                </tr>
+                                <tr>
+                                    <td align="right" style="width:150px;"><b>กำลังทำ</b></td>
+                                    <td>: @c.NOW_REP</td>
+                                </tr>
+                                <tr>
+                                    <td align="right" style="width:150px;"><b>รอซ่อม</b></td>
+                                    <td>: @c.WAIT_REP</td>
+                                </tr>
+                                <tr>
+                                    <td align="right" style="width:150px;"><b>ซ่อมไม่ได้</b></td>
+                                    <td>: @c.CANNOT_REP</td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="width:100px;text-align:right;"></td>
+                        <td></td>
+                    </tr>
+                </table>
+               
+            </div>
+        </div>
+
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
+    </div>
+</div>

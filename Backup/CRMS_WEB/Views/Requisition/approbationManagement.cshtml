@@ -1,0 +1,171 @@
+﻿@using CRMS_WEB.Models.beans;
+@using PagedList.Mvc;
+@using PagedList;
+@using CRMS_WEB.Coverts;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewBag.Title = "approbationManagement";
+
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Layout = "~/Views/Shared/Template_admin.cshtml";
+        }
+        else
+        {
+            Response.Redirect("~/Home");
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+    }
+
+    var approve = ViewBag.Approbation;// as List<RequisitionModel>;
+}
+
+<script>
+    $(document).ready(function () {
+        $("#stock").addClass("active");  // add class nav
+    });
+</script>
+<div class="wrapper col2">
+    <div id="breadcrumb">
+        <ul>
+            <li class="first">คุณอยู่ที่ </li>
+            <li>&#187;</li>
+            <li><a href="#">คลังอะไหล่</a></li>
+            <li>&#187;</li>
+            <li class="current"><a href="#">จัดการการเบิกอะไหล่</a></li>
+
+            <li style="float:right;">
+                <button onclick="goto('../User/UserEditing?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูลส่วนตัว" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-cog"></i> </button>
+                <button onclick="goto('/User/ManagerProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="wrapper col4">
+    <div id="container">
+        <h3>รายการเบิกอะไหล่ </h3>
+        @using (Html.BeginForm("approbationManagement", "Requisition", FormMethod.Post, new { @style = "form-inline" }))
+        {
+            <p>
+                <div>
+                </div>
+                <span style="float: left; margin: 5px 0px 0px 0px;">รายการใช้,อะไหล่,การอนุมัติ : </span> @Html.TextBox("SearchText", null, new { @class = "form-control input-sm ", @style = "color:;width:30%;float:left; margin:0px 8px 0px 8px;" })
+                <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-search"></i> Search</button>
+                <span style="float:right;"> รายการทั้งหมด  @(Request.Params["SearchText"] != null ? approve.Count : ViewBag.Total) </span>
+            </p>
+        }
+        <table class="table table-hover">
+            <thead>
+                <tr style="background:#EEE;">
+                    <th style="width:3%;white-space:nowrap;text-align:center;">#</th>
+                    <th style="width:10%;white-space:nowrap;text-align:center;">รหัสซ่อม</th>
+                    <th style="width:12%;white-space:nowrap;text-align:center;">รายการใช้</th>
+                    <th style="width:30%;white-space:nowrap;text-align:center;">อะไหล่</th>
+                    <th style="width:5%;white-space:nowrap;text-align:center;background:#DDD;">คลัง</th>
+                    <th style="width:10%;white-space:nowrap;text-align:center;">จำวนวนเบิก</th>
+                    <th style="width:10%;white-space:nowrap;text-align:center;">ราคา</th>
+                    <th style="width:10%;white-space:nowrap;text-align:center;">การอนุมัติ</th>
+                    <th style="width:15%;white-space:nowrap;text-align:center;">ตัวจัดการ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int n = 1;
+                }
+                @if (approve.Count > 0)
+                {
+
+                    foreach (var apv in approve)
+                    {
+                        <tr>
+                            <td>@n</td>
+                            <td>@apv.REPAIR_NO.REPAIR_NO</td>
+                            <td><a href="~/Services/RepairDescription?repid=@apv.REPAIR_NO.REPAIR_NO">@apv.REPAIR_NO.DAMAGE</a></td>
+                            <td>@apv.STOCK_NO.PART.TYPE.PART_TYPE_NAME @apv.STOCK_NO.PART.BRAND.PART_BRAND_NAME @apv.STOCK_NO.STOCK_INFO</td>
+                            <td style="text-align:right;background:#DDD;">@apv.STOCK_NO.UNIT</td>
+                            <td align="right">@(apv.REQ_UNIT + " * " + apv.STOCK_NO.PRICE.ToString("##,##") + "บ.")</td>
+                            <td align="right">@((apv.REQ_UNIT * apv.STOCK_NO.PRICE).ToString("##,##"))</td>
+                            <td align="center">
+                                @if (apv.APROVE.Equals("allow"))
+                                {
+                                    <b style="color:green;">อนุมัติแล้ว</b>
+                                }
+                                else if (apv.APROVE.Equals("wait"))
+                                {
+                                    <b style="color:orange;">รออนุมัติ</b>
+                                }
+                                else
+                                {
+                                    <b style="color:red;">ไม่อนุมัติ</b>
+                                }
+
+                            </td>
+
+                            <!-- ตัวเลือกตัวจัดการ -->
+                            <td align="center">
+                                <button onclick="approbation(@apv.REQ_ID)" class="btn btn-default btn-sm" data-toggle="tooltip" title="" data-original-title="ตัวเลือก"><i class="glyphicon glyphicon-cog" style="color:blue;"></i></button>
+                                @if (!apv.APROVE.Equals("allow"))
+                                {
+                                    <button onclick="ConfirmDel('../Requisition/ApproveDeleting?reqID=@apv.REQ_ID&repID=@apv.REPAIR_NO.REPAIR_NO')" class="btn btn-default btn-sm" data-toggle="tooltip" title="" data-original-title="ลบการอนุมัติ"><i class="glyphicon glyphicon-trash" style="color:red;"></i></button>
+                                }
+                            </td>
+                        </tr>
+                                n++;
+                    }
+
+                }
+                else if (approve.Count == 0 && Request.Params["SearchText"] != null)
+                {
+                    <tr>
+                        <td colspan="8" style="font-weight:bold;color:red;text-align:center;">
+                            " @Request.Params["SearchText"] " ไม่พบข้อมูลที่ค้นหา
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="8" style="font-weight:bold;color:red;text-align:center;">
+                            ไม่มีข้อมูล
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+            <tfoot>
+                @if (n > 20)
+                {
+                    <tr>
+                        <td colspan="8" align="center">
+                            @Html.PagedListPager((IPagedList)ViewBag.Approbation, page => Url.Action("approbationManagement", "Requisition", new { page = page, SearchText = Request.Params["SearchText"] != null ? Request.Params["SearchText"] : "" }))
+                        </td>
+                    </tr>
+                }
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<script>
+    var approbation = function (reqID) {
+        $("#popup").load("../Requisition/Approbation_popup", { "reqID": reqID }, function (data, status) {
+            console.log("test APP:" + status);
+            if (status == "success") {
+                $("#approbation").modal("show");
+            }
+        });
+    }
+</script>

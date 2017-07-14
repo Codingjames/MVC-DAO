@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "ServiceList";
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Layout = "~/Views/Shared/Template_admin.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Layout = "~/Views/Shared/Template_emp.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 3)
+        {
+            Layout = "~/Views/Shared/Template_cust.cshtml";
+        }
+    }
+    else
+    {
+        Layout = "~/Views/Shared/Template_index.cshtml";
+    }
+}
+
+<h2>ServiceList</h2>

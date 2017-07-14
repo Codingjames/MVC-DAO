@@ -1,0 +1,144 @@
+﻿@using CRMS_WEB.Models.beans;
+@using PagedList.Mvc;
+@using PagedList;
+@using CRMS_WEB.Coverts;
+@{
+    ViewBag.Title = "ReadUpdateRepair";
+
+    //สำหรับลูกค้า
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Response.Redirect("~/Main/Staff");
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Response.Redirect("~/Main/Staff");
+        }
+        else if ((int)Session["PRIO"] == 3)
+        {
+            Layout = "~/Views/Shared/Template_cust.cshtml";
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+        // HttpResponse.Redirecting = "";
+    }
+
+    ConvertClass cv = new ConvertClass();
+    // data
+    var data = ViewBag.REP ;//as List<RepairModel>;
+
+}
+
+<script>
+    $(document).ready(function () {
+        $("#alertBell_a").addClass("active");
+    });
+</script>
+<div class="wrapper col2">
+
+    <div id="breadcrumb">
+        <ul>
+            <!--             Badge นับจำนวนการอัพเดท และ ข้อความ                 -->
+            <li class="first">
+                <a id="alertBell_a" data-toggle="tooltip" data-original-title="ข้อมูลของท่านที่มีการอัพเดท" href="~/Services/ReadUpdateRepair?c=@Session["ID"]">
+                    <i class="glyphicon glyphicon-bell"></i>
+                    การแจ้งเตือน <span class="badge" id="alertBell"></span>
+                </a>
+            </li>
+            <li>&nbsp;</li>
+            <li>
+                <a id="badgeMSG_a" data-toggle="tooltip" data-original-title="ข้อความความเคลื่อนไหวในระบบ" href="~/Sysmassage/ReadMassage?c=@Session["ID"]">
+                    <i class="glyphicon glyphicon-envelope"></i>
+                    ข้อความระบบ <span class="badge" id="badgeMSG"></span>
+                </a>
+            </li>
+
+            <li style="float:right;">
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="wrapper col4">
+    <div id="container">
+        <p>
+            ข้อมูลของท่านทีมีการอัพเดทข้อมูล
+        </p>
+        <div class="panel panel-info">
+            <div class="panel-heading" style="height:53px;">
+                <b style="font-size:20px;">ข้อความระบบ</b>
+            </div>
+
+            <div class="panel-body" style="height:500px;display:table;width:100%;">
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr style="background:#EEE;">
+                            <th width="50px">ลำดับ</th>
+                            <th style="text-align:center;">รายการ</th>
+                            <th style="text-align:center;width:20%;">วันที่ส่ง</th>
+                            <th style="text-align:center;width:10%;"><i class="glyphicon glyphicon-list"></i> แสดง</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int n = 1 + cv.pageToNumrunning(Request.Params["page"] != null ? Int32.Parse(Request.Params["page"]) : 0, 20);
+                        }
+                        @if (data.Count > 0)
+                        {
+                            foreach (var r in data)
+                            {
+                                <tr style="">
+                                    <td align="right">@n</td>
+                                    <td>
+                                        @(r.PRODUCT.TYPE.PRO_TYPE_NAME + " " + r.PRODUCT.BANRD.PRO_BAND_NAME + " " + r.MODEL + " " + r.MODEL)<br />
+                                        <span style="color:red;">ซ่อม : </span> @r.DAMAGE
+                                    </td>
+                                    <td align="">@r.REPAIR_REG.ToString("d MMMM yyyy")</td>
+                                    <td align="center">
+                                        <button onclick="goto('../Services/ReadRepairDescription?repairID=@(r.REPAIR_NO)')" data-toggle="tooltip" data-original-title="ดูข้อมูล.." class="btn btn-default btn-sm"><i class="glyphicon glyphicon-eye-open"></i></button>
+                                    </td>
+                                </tr>
+                                n++;
+                            }
+
+
+                        }
+                        else
+                        {
+                            <tr>
+                                <td align="center">
+                                    <b>ไม่มีข้อมูล</b>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @if (n > 20)
+                    {
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" align="center">
+                                    <!-- ลิ้งเพจ -->
+                                    @Html.PagedListPager((IPagedList)ViewBag.REP, page => Url.Action("ReadUpdateRepair", "Services", new { page = page, c = Request.Params["c"] }))
+                                </td>
+                            </tr>
+                        </tfoot>
+                    }
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="RepairingDataSet" targetNamespace="http://tempuri.org/RepairingDataSet.xsd" xmlns:mstns="http://tempuri.org/RepairingDataSet.xsd" xmlns="http://tempuri.org/RepairingDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="RepairingDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="RepairingDataSet" msprop:Generator_UserDSName="RepairingDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="RepairingDataTable" msprop:Generator_TableClassName="RepairingDataTableDataTable" msprop:Generator_TableVarName="tableRepairingDataTable" msprop:Generator_TablePropName="RepairingDataTable" msprop:Generator_RowDeletingName="RepairingDataTableRowDeleting" msprop:Generator_RowChangingName="RepairingDataTableRowChanging" msprop:Generator_RowEvHandlerName="RepairingDataTableRowChangeEventHandler" msprop:Generator_RowDeletedName="RepairingDataTableRowDeleted" msprop:Generator_UserTableName="RepairingDataTable" msprop:Generator_RowChangedName="RepairingDataTableRowChanged" msprop:Generator_RowEvArgName="RepairingDataTableRowChangeEvent" msprop:Generator_RowClassName="RepairingDataTableRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="C_UID" msprop:Generator_ColumnVarNameInTable="columnC_UID" msprop:Generator_ColumnPropNameInRow="C_UID" msprop:Generator_ColumnPropNameInTable="C_UIDColumn" msprop:Generator_UserColumnName="C_UID" type="xs:string" minOccurs="0" />
+              <xs:element name="C_NAME" msprop:Generator_ColumnVarNameInTable="columnC_NAME" msprop:Generator_ColumnPropNameInRow="C_NAME" msprop:Generator_ColumnPropNameInTable="C_NAMEColumn" msprop:Generator_UserColumnName="C_NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="REP_DET" msprop:Generator_ColumnVarNameInTable="columnREP_DET" msprop:Generator_ColumnPropNameInRow="REP_DET" msprop:Generator_ColumnPropNameInTable="REP_DETColumn" msprop:Generator_UserColumnName="REP_DET" type="xs:string" minOccurs="0" />
+              <xs:element name="DAMAGE" msprop:Generator_ColumnVarNameInTable="columnDAMAGE" msprop:Generator_ColumnPropNameInRow="DAMAGE" msprop:Generator_ColumnPropNameInTable="DAMAGEColumn" msprop:Generator_UserColumnName="DAMAGE" type="xs:string" minOccurs="0" />
+              <xs:element name="STAFF" msprop:Generator_ColumnVarNameInTable="columnSTAFF" msprop:Generator_ColumnPropNameInRow="STAFF" msprop:Generator_ColumnPropNameInTable="STAFFColumn" msprop:Generator_UserColumnName="STAFF" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

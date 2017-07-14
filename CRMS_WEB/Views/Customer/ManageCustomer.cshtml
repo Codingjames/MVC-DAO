@@ -1,0 +1,154 @@
+﻿@using CRMS_WEB.Models.beans;
+@using CRMS_WEB.Coverts;
+@using PagedList.Mvc;
+@using PagedList;
+
+@{                                                                                          @* การจัดการลูกค้า *@
+    ViewBag.Title = "ManageCustomer";
+    ConvertClass cv = new ConvertClass();
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Layout = "~/Views/Shared/Template_admin.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Layout = "~/Views/Shared/Template_emp.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 3)
+        {
+            Response.Redirect("~/Home");
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+        // HttpResponse.Redirecting = "";
+    }
+    var cust = ViewBag.Customer;//as List<CustomerModel>;
+}
+
+<script>
+    $(document).ready(function () {
+        $("#user").addClass("active");
+    });
+</script>
+<div class="wrapper col2">
+    <div id="breadcrumb">
+        <ul>
+            <li class="first">คุณอยู่ที่ </li>
+            <li>&#187;</li>
+            <li><a>จัดการผู้ใช้</a></li>
+            <li>&#187;</li>
+            <li class="current"><a>การจัดการลูกค้า</a></li>
+
+
+            <li style="float:right;">
+                <button onclick="goto('../User/UserEditing?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูลส่วนตัว" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-cog"></i> </button>
+                @if ((int)Session["PRIO"] == 1)
+                {
+                    <button onclick="goto('/User/ManagerProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+                }
+                else if ((int)Session["PRIO"] == 2)
+                {
+                    <button  onclick="goto('/User/EmployeeProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+                }
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="wrapper col4">
+    <div id="container">
+        <h1>
+            จัดการข้อมูลลูกค้า
+            <a href="~/Customer/AddCustomer" class="btn btn-default btn-sm" style="float:right;"><i class="glyphicon glyphicon-plus-sign"></i> เพิ่มลูกค้า</a>
+        </h1>
+        @using (Html.BeginForm("ManageCustomer", "Customer", FormMethod.Post, new { @style = "form-inline" }))
+        {
+            <p>
+                <div>
+                </div>
+                <span style="float: left; margin: 5px 0px 0px 0px;">รหัส,ชื่อ-สกุล,เบอร์โทร : </span> @Html.TextBox("SearchText", null, new { @class = "form-control input-sm ", @style = "color:;width:30%;float:left; margin:0px 8px 0px 8px;" })
+                <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-search"></i> Search</button>
+                <span style="float:right;"> ทั้งหมด  @(Request.Params["SearchText"] != null ? cust.Count : ViewBag.Total)</span>
+            </p>
+        }
+        <table class="table">
+            <thead>
+                <tr style="background:#EEE;">
+                    <th width="60px">ลำดับ</th>
+                    <th width="120px"> รหัสลูกค้า </th>
+                    <th width="150px"> ชื่อ-สกุล</th>
+                    <th> เบอร์ </th>
+                    <th> อีเมล </th>
+                    <th width="80px"> บริการ </th>
+                    <th width="160px"> ตัวจัดการ </th>
+                </tr>
+            </thead>
+            @if (cust.Count > 0)
+            {
+                <tbody>
+                    @{
+                        int i = 1 + cv.pageToNumrunning(Request.Params["page"] != null ? Int32.Parse(Request.Params["page"]) : 0, 20);
+                    }
+                    @foreach (var c in cust)
+                    {
+                        <tr>
+                            <td align="right">@i</td>
+                            <td> @c.CUST_UID</td>
+                            <td> @(c.C_NAME + " " + c.C_LASTNAME) </td>
+                            <td>@c.C_TEL</td>
+                            <td>@c.C_EMAIL</td>
+                            <td>@c.TOTAL_REPAIR</td>
+                            <td>
+                                @if((int)Session["PRIO"]==1){
+                                     <button onclick="ConfirmDel('../Customer/DeleteCustomer?custID=@c.CUST_NO')" class="btn btn-danger btn-sm" data-toggle="tooltip" title="ลบข้อมูล"><i class="glyphicon glyphicon-trash"></i></button>
+                                <button onclick="goto('../Customer/CustomerEditing?custID=@c.CUST_NO')" class="btn btn-warning btn-sm" data-toggle="tooltip" title="แก้ไขข้อมูล"> <i class="glyphicon glyphicon-edit"></i></button>
+                                }
+                                <button onclick="goto('../Customer/CustomerProfile?custID=@c.CUST_NO')" class="btn btn-default btn-sm" data-toggle="tooltip" title="ข้อมูลลูกค้าโดยละเอียด"> เพิ่มเติม</button>
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                </tbody>
+                <tfoot>
+                    <tr style="background:#EEE;">
+                        <td colspan="7">
+                            @if(i>20){
+                                @Html.PagedListPager((IPagedList)ViewBag.REPAIR, page => Url.Action("ManageCustomer", "Customer", new { page }))
+                            }
+                        </td>
+                    </tr>
+                </tfoot>
+            }
+            else if (Request.Params["SearchText"] != null && cust.Count == 0)
+            {
+                <tr>
+                    <td colspan="7">
+                        <center><b style="color:red;">"@Request.Params["SearchText"]" ไม่พบข้อมูลที่ค้นหา</b> </center>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7">
+                        <center><b style="color:red;">ไม่มีข้อมูล</b> </center>
+                    </td>
+                </tr>
+            }
+        </table>
+
+
+
+        <div class="clear"></div>
+    </div>
+</div>

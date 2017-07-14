@@ -1,0 +1,93 @@
+﻿@{
+    ViewBag.Title = "LIndex";
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Response.Redirect("~/Main/Staff");
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Response.Redirect("~/Main/Staff");
+        }
+        else if ((int)Session["PRIO"] == 3)
+        {
+            Response.Redirect("~/Main/C");
+        }
+    }
+    else
+    {
+        Layout = "~/Views/Shared/Template_index.cshtml";
+        // HttpResponse.Redirecting = "";
+    }
+}
+
+<div class="wrapper col2">
+    <div id="gallery">
+        <div class="col-lg-6">
+            <h2>สิทธิประโยชน์จากการใช้ระบบ</h2>
+
+            <ul class="bullet bullet-dot" style="font-size:18px;">
+                <li> ติดตามความคืบหน้าของอุปกรณ์ของท่าน <br /></li>
+                <li> แจ้งข้อมูลเพิ่มเติมได้ <br />  </li>
+                <li> รับ SMS จากทางเราได้ <br /></li>
+                <li> รับข้อความในระบบได้ <br /></li>
+            </ul>
+
+        </div>
+        <div class="col-lg-6">
+            <form action="~/Login/CheckLogin" method="post">
+                <h4>การลงชื่อเข้าใช้ระบบ</h4>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1"> ชื่อเข้าใช้</span>
+                    <input type="text" name="Username" class="form-control" placeholder="Username" aria-describedby="basic-addon1" required>
+                </div>
+                &nbsp;
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1"> รหัสผ่าน </span>
+                    <input type="text" name="Password" class="form-control" placeholder="Password" aria-describedby="basic-addon1" required>
+                </div>
+                &nbsp;
+                <div class="input-group">
+                    <button class="btn btn-default">เข้าสู่ระบบ</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="clear"></div>
+    </div>
+    <div id="gallery">
+        <ul>
+            <li class="placeholder" style="background-image: url(@Url.Content("~/Content/images/gallery_default.jpg"));">Image Holder</li>
+            <li><a class="swap" style="background-image: url(@Url.Content("~/Content/images/S1.jpg"));" href="#gallery"><strong>Services</strong><span><img src="@Url.Content("~/Content/images/L1.jpg")" alt="" /></span></a></li>
+            <li><a class="swap" style="background-image: url(@Url.Content("~/Content/images/S2.jpg"));" href="#gallery"><strong>Products</strong><span><img src="@Url.Content("~/Content/images/L2.jpg")" alt="" /></span></a></li>
+            <li class="last"><a class="swap" style="background-image: url(@Url.Content("~/Content/images/S3.jpg"));" href="#gallery"><strong>Company</strong><span><img src="@Url.Content("~/Content/images/L3.jpg")" alt="" /></span></a></li>
+        </ul>
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="wrapper col4">
+    <div id="container">
+
+        <div id="content">
+        </div>
+
+        <div class="clear"></div>
+    </div>
+</div>
+<style>
+    .bullet li {
+        display: block;
+    }
+
+    .bullet-dot li:before {
+        /*Using a Bootstrap glyphicon as the bullet point*/
+        content: "\e080";
+        font-family: 'Glyphicons Halflings';
+        font-size: 9px;
+        float: left;
+        margin-top: 4px;
+        margin-left: -17px;
+        color: #CCCCCC;
+    }
+</style>

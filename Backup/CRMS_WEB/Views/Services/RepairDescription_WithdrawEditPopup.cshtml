@@ -1,0 +1,32 @@
+﻿@using CRMS_WEB.Models.beans;
+@{
+    var req = ViewBag.REQ as RequisitionModel;
+}
+<div class="modal fade" id="WithdrawEditPopup">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                แก้ไขการเบิก
+            </div>
+            @using (Html.BeginForm("WithdrawUpdate","Services",FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label">จำนวนการเบิก</label>
+                        <div class="col-xs-3">
+                            <input type="text" name="reqUnit" value="@req.REQ_UNIT" class="form-control" onkeypress="return isNumber(event,this)" />
+                        </div>
+                        <div class="col-xs-4" style="color:red;">* เฉพาะตัวเลขเท่านั้น</div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="reqID" value="@req.REQ_ID" />
+                    <input type="hidden" name="repID" value="@req.REPAIR_NO.REPAIR_NO" />
+                    <button type="submit" class="btn btn-default btn-sm"><i style="color:green;" class="glyphicon glyphicon-save"></i> บันทึก</button>
+                    <button type="reset" class="btn btn-default btn-sm" data-dismiss="modal">ปิด</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

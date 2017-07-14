@@ -1,0 +1,123 @@
+﻿@using CRMS_WEB.Models.beans;
+
+@{
+    ViewBag.Title = "ReadMassage";
+    // เฉพาะลูกค้า
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Response.Redirect("~/Main/Staff");
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Response.Redirect("~/Main/Staff");
+        }
+        else if ((int)Session["PRIO"] == 3)
+        {
+            Layout = "~/Views/Shared/Template_cust.cshtml";
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+        // HttpResponse.Redirecting = "";
+    }
+
+    // data
+    var news = ViewBag.NEWS as HashSet<NewsModel>;
+}
+<script>
+    $(document).ready(function () {
+        $("#badgeMSG_a").addClass("active");
+    });
+</script>
+<div class="wrapper col2">
+
+    <div id="breadcrumb">
+        <ul>
+            <!--             Badge นับจำนวนการอัพเดท และ ข้อความ                 -->
+            <li class="first">
+                <a data-toggle="tooltip" data-original-title="ข้อมูลของท่านที่มีการอัพเดท" href="~/Services/ReadUpdateRepair?c=@Session["ID"]">
+                    <i class="glyphicon glyphicon-bell"></i>
+                    การแจ้งเตือน <span class="badge" id="alertBell"></span>
+                </a>
+            </li>
+            <li>&nbsp;</li>
+            <li>
+                <a data-toggle="tooltip" data-original-title="ข้อความความเคลื่อนไหวในระบบ" href="~/Sysmassage/ReadMassage?c=@Session["ID"]">
+                    <i class="glyphicon glyphicon-envelope"></i>
+                    ข้อความระบบ <span class="badge" id="badgeMSG"></span>
+                </a>
+            </li>
+
+            <li style="float:right;">
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="wrapper col4">
+    <div id="container">
+        <div class="panel panel-info">
+            <div class="panel-heading" style="height:53px;">
+                <b style="font-size:20px;">ข้อความระบบ</b>
+            </div>
+            <div class="panel-body" style="height:500px;">
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr style="background:#EEE;">
+                            <th width="50px">ลำดับ</th>
+                            <th style="text-align:center;">ข้อความ</th>
+                            <th style="text-align:center;width:20%;">วันที่ส่ง</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (news.Count() > 0)
+                        {
+                            int n = 1;
+                            foreach (var nw in news)
+                            {
+                                if (String.IsNullOrEmpty(nw.ALERT_STATUS))
+                                {
+                                    <tr style="background: #FFD9D1;">
+                                        <td align="right">@n</td>
+                                        <td>@nw.NEWS_MSG</td>
+                                        <td>@nw.NEWS_REG.ToString("d MMMM yyyy")</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr >
+                                        <td align="right">@n</td>
+                                        <td>@nw.NEWS_MSG</td>
+                                        <td>@nw.NEWS_REG.ToString("d MMMM yyyy")</td>
+                                    </tr>
+                                }
+                                n++;
+                            }
+
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="2" align="center" style="color:red;"><b>ไม่มีข้อความ</b></td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,160 @@
+﻿@using CRMS_WEB.Models.beans;
+@using PagedList.Mvc;
+@using PagedList;
+@using CRMS_WEB.Coverts;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{                                                                          @* index of services *@
+    ViewBag.Title = "EditRepair";
+    ConvertClass cv = new ConvertClass();
+
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Layout = "~/Views/Shared/Template_admin.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Layout = "~/Views/Shared/Template_emp.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 3)
+        {
+            Response.Redirect("~/Home");
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+        // HttpResponse.Redirecting = "";
+
+    }
+
+    var repair = ViewData["REPAIR"] as RepairModel;
+}
+
+<script>
+    $(document).ready(function () {
+        $("#services").addClass("active");  // add class nav
+    });
+</script>
+<div class="wrapper col2">
+    <div id="breadcrumb">
+        <ul>
+            <li class="first">คุณอยู่ที่ </li>
+            <li>&#187;</li>
+            <li class=""><a href="../Services">บริการ</a></li>
+            <li>&#187;</li>
+            <li class="current"><a href="#">การแก้ไขรายการ</a></li>
+
+            <li style="float:right;">
+                <button onclick="goto('../User/UserEditing?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูลส่วนตัว" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-cog"></i> </button>
+                <button onclick="goto('/User/ManagerProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="wrapper col4">
+    <div id="container">
+        <form action="~/Services/RepairUpdate" method="post">
+            <div class="form-group row">
+                <label for="example-text-input" class="col-xs-2 col-form-label">ประเภท</label>
+                <div class="col-xs-10">
+                    <select name="type_id" id="IDtype" class="form-control" required>
+                        @foreach (var t in ViewData["PRODUCTTYPE"] as List<ProductTypeModel>)
+                        {
+                            <option value="@(t.PRO_TYP_ID)" selected="@(t.PRO_TYP_ID == repair.PRODUCT.TYPE.PRO_TYP_ID )">@t.PRO_TYPE_NAME</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="example-search-input" class="col-xs-2 col-form-label">ยี่ห้อ</label>
+                <div class="col-xs-10">
+                    <select name="product_id" id="IDproduct" class="form-control" required>
+                        @foreach (var b in ViewData["BRAND"] as List<ProductModel>)
+                        {
+                            <option value="@b.PRODUCT_NO" selected="@(b.BANRD.PRO_BRAND_ID==repair.PRODUCT.BANRD.PRO_BRAND_ID)">@b.BANRD.PRO_BAND_NAME</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="example-email-input" class="col-xs-2 col-form-label">รุ่น</label>
+                <div class="col-xs-10">
+                    <input class="form-control" type="text" name="model" value="@repair.MODEL" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="example-email-input" class="col-xs-2 col-form-label">สี</label>
+                <div class="col-xs-10">
+                    <input class="form-control" type="text" name="color" value="@repair.COLOR" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="example-email-input" class="col-xs-2 col-form-label">อาการที่ชำรุด</label>
+                <div class="col-xs-10">
+                    <input class="form-control" type="text" name="damage" value="@repair.DAMAGE" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="example-email-input" class="col-xs-2 col-form-label">วันที่นัดรับ</label>
+                <div class="col-xs-10">
+                    <input class="form-control" type="text" name="consign" id="datetimepicker" value="@repair.DATE_CONSIGN" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="example-url-input" class="col-xs-2 col-form-label">ผู้รับผิดชอบ</label>
+                <div class="col-xs-10">
+                    <select name="staff_id" class="form-control" required>
+                        @foreach (var staff in ViewData["STAFF"] as List<UsersModel>)
+                        {
+                            if (staff.USER_NO == Int32.Parse(Session["ID"].ToString()))
+                            {
+                                <option value="@staff.USER_NO" selected="@(staff.USER_NO==repair.STAFF.USER_NO)"> รับผิดชอบเอง </option>
+                            }
+                            else
+                            {
+                                <option value="@staff.USER_NO" selected="@(staff.USER_NO==repair.STAFF.USER_NO)">@(staff.NAME + " " + staff.LASTNAME)</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row" style="text-align:center;">
+                <input type="hidden" name="repID" value="@repair.REPAIR_NO" />
+                <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-save"></i> บันทึกการเแก้ไข</button>
+                <button type="reset" onclick="goto('../Services')"  class="btn btn-info btn-sm"><i class="glyphicon glyphicon-refresh"></i> ยกเลิก</button>
+            </div>
+
+        </form>
+        <div class="clear"></div>
+    </div>
+</div>
+
+@* Javascript Data loading
+    Change type to load brand of type.
+*@
+<script>
+    $(document).ready(function () {
+        $("#IDtype").change(function () {
+            var x = $(this).val();
+            if (x !== '') {
+                $.post("DataLoading_ProductType", { "protypeid": x }, function (re, st) {
+                    $("#IDproduct").html(re);
+                    //console.log("result : " + re);
+                });
+                //console.log("TEST CHANGE :" + x);
+            }
+
+        });
+    });
+</script>

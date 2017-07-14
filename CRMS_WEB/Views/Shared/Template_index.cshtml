@@ -1,0 +1,72 @@
+﻿@*@{
+        ViewBag.Title = "Template_index";
+    }*@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>V-tech Nakhonpanom</title>
+    <link rel="icon" href="@Url.Content("~/Content/images/favicon.png")">
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    @*@bundles.Add(new StyleBundle("~/Content/styles/layout.css").Include("~/Content/site.css"));*@
+    <link rel="stylesheet" href="@Url.Content("~/Content/styles/layout.css")" type="text/css" />
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/styles/Bootstrap/css/bootstrap.min.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/styles/Bootstrap/css/bootstrap-theme.min.css")" type="text/css" />
+
+
+    <script type="text/javascript" src="@Url.Content("~/Content/JS/jquery-3.1.0.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/JS/crmsJS.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/styles/Bootstrap/js/bootstrap.min.js")"></script>
+</head>
+<body id="top">
+    <div class="wrapper col1">
+        <div id="head">
+            <h1><a href="~/Home/index" style="text-decoration:none;">V-Tech Nakhonpanom</a></h1>
+            <p>บริการซ่อม โน๊ตบุ๊ค คอมฯ ปริ้นเตอร์</p>
+            <div id="topnav">
+                <ul>
+                    <li><a id="Hindex" href="~/Home">หน้าหลัก</a></li>
+                    <li>
+                        @*<a href="pages/full-width.html">Full Width</a>*@
+                        <a id="ContactUs" href="~/Home/ContactUs">ติดต่อเรา</a>
+                    </li>
+                    <li>
+                        <a id="Registration" href="~/Login/Registration">สมัครสมาชิค</a>
+                    </li>
+                    <li ><a id="LIndex" href="~/Login">เข้าสู่ระบบ</a></li>
+                </ul>
+            </div>
+            <div id="search" style="display:none;">
+                <form action="#" method="post">
+                    <fieldset>
+                        <legend>Site Search</legend>
+                        <input type="submit" name="go" id="go" value="GO" />
+                        <input type="text" value="" onfocus="this.value=(this.value=='Search the site&hellip;')? '' : this.value ;" />
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- ข้อมูลส่วนตัวของ html -->
+    @RenderBody()
+
+    <!-- Footer -->
+    <div class="wrapper col5">
+        <div id="footer">
+
+            <!-- End Company Details -->
+            <div id="copyright">
+                <p class="fl_left">Copyright &copy; 2014 - All Rights Reserved - <a href="#">Domain Name</a></p>
+                <p class="fl_right">create by <a target="_blank" href="http://www.jbs-enterprise.byethost5.com/?i=1" title="Free Website Templates">ธ.รลฐพัฐ</a></p>
+                <br class="clear" />
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        $("#@ViewBag.Title").addClass("active");
+    });
+</script>

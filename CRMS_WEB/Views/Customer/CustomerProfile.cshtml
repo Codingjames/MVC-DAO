@@ -1,0 +1,269 @@
+﻿@using CRMS_WEB.Models.beans;
+@using CRMS_WEB.Coverts;
+@using PagedList.Mvc;
+@using PagedList;
+@{
+    ViewBag.Title = "CustomerProfile";
+
+
+    ConvertClass cv = new ConvertClass();
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Layout = "~/Views/Shared/Template_admin.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Layout = "~/Views/Shared/Template_emp.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 3)
+        {
+            Response.Redirect("~/Home");
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+        // HttpResponse.Redirecting = "";
+    }
+    //data
+    var cust = ViewBag.CUSTOMER as CustomerViewModel;
+}
+<script>
+    $(document).ready(function () {
+        $("#user").addClass("active");
+    });
+
+</script>
+
+@if (Request.Params["SearchText"] != null)
+{
+    <script>
+        $(document).ready(function () {
+            $("[name='SearchText']").focus();
+        });
+    </script>
+}
+
+<div class="wrapper col2">
+    <div id="breadcrumb">
+        <ul>
+            <li class="first">คุณอยู่ที่ </li>
+            <li>&#187;</li>
+            <li><a>จัดการผู้ใช้</a></li>
+            <li>&#187;</li>
+            <li class=""><a href="~/Customer/ManageCustomer">การจัดการขุอมูลลูกค้า</a></li>
+            <li>&#187;</li>
+            <li class="current"><a>ข้อมูลประวัติลูกค้า</a></li>
+            <li style="float:right;">
+                <button onclick="goto('../User/UserEditing?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูลส่วนตัว" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-cog"></i> </button>
+                @if ((int)Session["PRIO"] == 1)
+                {
+                    <button onclick="goto('/User/ManagerProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+                }
+                else if ((int)Session["PRIO"] == 2)
+                {
+                    <button onclick="goto('/User/EmployeeProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+                }
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="wrapper col4">
+    <div id="container">
+        <div class="panel panel-info">
+            <div class="panel-heading" style="height:53px;">
+                ประวัติลูกค้า
+                @if ((int)Session["PRIO"] == 1)
+                {
+                    if (!String.IsNullOrEmpty(cust.CUSTOMER.C_TEL))
+                    {
+                        if (cust.CUSTOMER.C_TEL.Length == 10)
+                        {
+                            <button onclick="goto('../SysSms/SmsCustomer?custID=@Request.Params["custID"]')" class="btn btn-default btn-sm glyphicon glyphicon-phone" data-toggle="tooltip" title="" data-original-title="ส่งข้อความ SMS " style="float:right;"></button>
+                        }
+                        else
+                        {
+                            <span style="float:right;color:red;padding-top:8px;"><b>หมายเลขโทรศัพท์ไม่ถูกต้อง</b></span>
+                        }
+                    }
+                    <button onclick="goto('../SysMassage/CustomerMassage?custID=@Request.Params["custID"]')" class="btn btn-default btn-sm glyphicon glyphicon-envelope" data-toggle="tooltip" title="" data-original-title="ความในระบบ" style="float: right; margin-right: 10px;"></button>
+
+                }
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <td style="width:50%;">
+                            <label style="color:#000000;">รายละเอียด :</label>
+                            <table class="table">
+                                <tr>
+                                    <td align="right" style="width:150px;"><b>รหัสสมาชิก</b></td>
+                                    <td style="border-right:2px solid lightblue;">@cust.CUSTOMER.CUST_UID</td>
+                                </tr>
+                                <tr>
+                                    <td align="right"><b>ชื่อ - สกุล</b></td>
+                                    <td style="border-right:2px solid lightblue;">@(cust.CUSTOMER.C_NAME + " " + cust.CUSTOMER.C_LASTNAME)</td>
+                                </tr>
+                                <tr>
+                                    <td align="right"><b>ที่อยู่</b></td>
+                                    <td style="border-right:2px solid lightblue;">@cust.CUSTOMER.C_ADDRESS</td>
+                                </tr>
+                                <tr>
+                                    <td align="right"><b>เบอร์โทรศัพท์</b></td>
+                                    <td style="border-right:2px solid lightblue;">@cust.CUSTOMER.C_TEL</td>
+                                </tr>
+                                <tr>
+                                    <td align="right"><b>อีเมล</b></td>
+                                    <td style="border-right:2px solid lightblue;">@cust.CUSTOMER.C_EMAIL</td>
+                                </tr>
+                            </table>
+
+                        </td>
+                        <td>
+                            <label style="color:#000000;">ประวัติการรับบริการ</label><br />
+                            <table class="table">
+                                <tr>
+                                    <td align="right" style="width:150px;"><b>ทั้งหมด</b></td>
+                                    <td>: @(cust.WAIT_REP + cust.NOW_REP + cust.SUCCESS_REP + cust.CANNOT_REP)</td>
+                                </tr>
+                                <tr>
+                                    <td align="right" style="width:150px;"><b>สำเร็จ</b></td>
+                                    <td>: @cust.SUCCESS_REP</td>
+                                </tr>
+                                <tr>
+                                    <td align="right" style="width:150px;"><b>กำลังทำ</b></td>
+                                    <td>: @cust.NOW_REP</td>
+                                </tr>
+                                <tr>
+                                    <td align="right" style="width:150px;"><b>รอซ่อม</b></td>
+                                    <td>: @cust.WAIT_REP</td>
+                                </tr>
+                                <tr>
+                                    <td align="right" style="width:150px;"><b>ซ่อมไม่ได้</b></td>
+                                    <td>: @cust.CANNOT_REP</td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="width:100px;text-align:right;"></td>
+                        <td></td>
+                    </tr>
+                </table>
+                <h2>รายการที่รับบริการ</h2>
+                @using (Html.BeginForm("CustomerProfile", "Customer", FormMethod.Post, new { style = "margin-bottom:10px;" }))
+                {
+                    <input type="hidden" name="custID" value="@Request.Params["custID"]" />
+                    <div class="col-lg-12">
+                        <label class="col-lg-2" style="padding-top:8px;"> รายการแสดง</label>
+                        <select name="SearchText" class="form-control col-lg-4" style="width:200px;" onchange="$('form').submit()">
+                            <option value="0" selected="@(Request.Params["SearchText"] != null ? Request.Params["SearchText"] == "0" ? true : false : false)">ทั้งหมด</option>
+                            <option value="1" selected="@(Request.Params["SearchText"] != null ? Request.Params["SearchText"] == "1" ? true : false : false)">รอซ่อม</option>
+                            <option value="2" selected="@(Request.Params["SearchText"] != null ? Request.Params["SearchText"] == "2" ? true : false : false)">กำลังซ่อม</option>
+                            <option value="3" selected="@(Request.Params["SearchText"] != null ? Request.Params["SearchText"] == "3" ? true : false : false)">เสร็จเรียบร้อย</option>
+                            <option value="4" selected="@(Request.Params["SearchText"] != null ? Request.Params["SearchText"] == "4" ? true : false : false)">ซ่อมไม่ได้</option>
+                        </select>
+                        <br />
+                        <br />
+                        <br />
+                    </div>
+                }
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr style="background:#EEE;">
+                            <th>#</th>
+                            <th>รายละเอียก</th>
+                            <th>การชำรุด</th>
+                            <th>วันนัดรับ</th>
+                            <th>ผู้ทำรับผิดชอบ</th>
+                            <th>สถานะ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var rep = ViewBag.REPAIRING;//as List<RepairModel>;
+                            int n = 1 + cv.pageToNumrunning(Request.Params["page"] != null ? Int32.Parse(Request.Params["page"]) : 0, 20);
+                        }
+                        @if (rep.Count > 0)
+                        {
+
+                            foreach (var r in rep)
+                            {
+                                <tr>
+                                    <td>@n</td>
+                                    <td>@(r.PRODUCT.TYPE.PRO_TYPE_NAME + " " + r.PRODUCT.BANRD.PRO_BAND_NAME + " " + r.MODEL + " สี" + r.COLOR)</td>
+                                    <td>@r.DAMAGE</td>
+                                    <td>@r.DATE_CONSIGN</td>
+                                    <td>@(r.STAFF.NAME + " " + r.STAFF.LASTNAME)</td>
+                                    <td style="text-align:center;font-weight:bold;">
+                                        @if (r.STATUS.STATUS_ID == 1)
+                                        {
+                                            <span style="color:yellowgreen;"> รอการซ่อม</span>
+                                        }
+                                        else if (r.STATUS.STATUS_ID == 2)
+                                        {
+                                            <span style="color:orange;">กำลังซ่อม</span>
+                                        }
+                                        else if (r.STATUS.STATUS_ID == 3)
+                                        {
+                                            <span style="color:green;">เสร็จเรียบร้อย</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="color:red;">ซ่อมไม่ได้</span>
+                                        }
+                                    </td>
+                                </tr>
+                                        n++;
+                            }
+
+                        }
+                        else if (Request.Params["SearchText"] != null && rep.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="6" style="color:red;font-weight:bold;text-align:center;">
+                                    0 รายการ
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" style="color:red;font-weight:bold;text-align:center;">
+                                    ไม่มีข้อมูล
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                    <tfoot>
+                        @if (n > 20)
+                        {
+                            <tr>
+                                <td align="center" colspan="6">
+                                    @Html.PagedListPager((IPagedList)ViewBag.REPAIRING, page => Url.Action("CustomerProfile", "Customer", new { custID = cust.CUSTOMER.CUST_NO, page = page, SearchText = Request.Params["SearchText"] != null ? Request.Params["SearchText"] : "" }))
+                                </td>
+                            </tr>
+                        }
+                    </tfoot>
+                </table>
+
+            </div>
+        </div>
+
+        <div class="clear"></div>
+    </div>
+</div>

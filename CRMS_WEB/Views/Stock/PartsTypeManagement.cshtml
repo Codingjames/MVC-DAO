@@ -1,0 +1,139 @@
+﻿@using CRMS_WEB.Models.beans;
+@{
+    ViewBag.Title = "PartsTypeManagement";
+
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Layout = "~/Views/Shared/Template_admin.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Layout = "~/Views/Shared/Template_emp.cshtml";
+        }
+        else
+        {
+            Response.Redirect("~/Home");
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+    }
+    // ข้อมูลจาก DB
+    var pType = ViewBag.PartsType as List<PartsTypeModel>;
+}
+
+<script>
+    $(document).ready(function () {
+        $("#stock").addClass("active");
+    });
+</script>
+
+<div class="wrapper col2">
+    <div id="breadcrumb">
+        <ul>
+            <li class="first">คุณอยู่ที่ </li>
+            <li>&#187;</li>
+            <li class=""><a href="~/Stock/StockManagement">จัดการคลังอะไหล่</a></li>
+            <li>&#187;</li>
+            <li class="current"><a href="#">จัดการชนิดอะไหล่</a></li>
+            <li style="float:right;">
+                <button onclick="goto('../User/UserEditing?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูลส่วนตัว" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-cog"></i> </button>
+                <button onclick="goto('/User/ManagerProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="wrapper col4">
+    <div id="container">
+        <div id="content">
+            <!-- Header Title -->
+            <h1>
+                รายการชนิดอะไหล่
+            </h1>
+            <div class="col-lg-12">
+                <table class="table">
+                    <thead>
+                        <tr style="">
+                            <th style="width: 50px; border-bottom: 4px solid lightblue;">#</th>
+                            <th style="width: 450px; border-bottom: 4px solid lightblue;">รายการ</th>
+                            <th style=" border-bottom: 4px solid lightblue;">ตัวจัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (pType.Count > 0)
+                        {
+                            int r = 1;
+                            foreach (var type in pType)
+                            {
+                                <tr>
+                                    <td>@r</td>
+                                    <td>@type.PART_TYPE_NAME</td>
+                                    <td>
+                                        <button onclick="getEditType('@type.PART_TYPE_ID')" class="btn btn-warning btn-xs" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูล"><i class="glyphicon glyphicon-edit"></i></button>
+                                        <button onclick="ConfirmDel('../Stock/PartsTypeDeleting?typeID=@type.PART_TYPE_ID')" class="btn btn-danger btn-xs" data-toggle="tooltip" title="" data-original-title="ลบข้อมูล"><i class="glyphicon glyphicon-trash"></i></button>
+                                    </td>
+                                </tr>
+                                r += 1;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="3" style="font-size:18px;font-weight:bold;text-align:center;"> ไม่มีข้อมูล </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+        <!-- --------------------------------------------------------*------------------->
+        <!--แทปด้านซ้ายมือ ------------------------------------------------------------------>
+        <div id="column">
+            <div id="featured">
+                <ul>
+                    <li>
+                        <h2 style="margin-bottom:10px;">แก้ไขชนิดอะไหล่</h2>
+                        @using (Html.BeginForm("PartsTypeUpdating", "Stock", FormMethod.Post, new { @class = "form-group" }))
+                        {
+                            <label for="protype_name">ชนิดอะไหล่</label>
+                            <input type="text" name="partsType_name" value="" class="form-control input-sm" required /><br />
+                            <input type="hidden" name="partsType_id" value="" class="form-control input-sm" /><br />
+
+                            <button type="submit" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-plus"></i> บันทึก</button>
+                            <button type="reset" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-refresh"></i> คืนค่า</button>
+                        }
+
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<script>
+    var getEditType = function (partTypeID) {
+        $.post("../Stock/PartsTypeName_DataLoading", { "ptypeID": partTypeID }, function (data, status) {
+            if (status == "success")
+            {
+                $("[name='partsType_name']").val(data.typeName);
+                $("[name='partsType_id']").val(data.typeID);
+            } else {
+                alert("Javascript function getEditType() : มีข้อผิดพลาด");
+            }
+        });
+    }
+</script>

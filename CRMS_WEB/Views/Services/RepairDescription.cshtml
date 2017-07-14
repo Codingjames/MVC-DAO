@@ -1,0 +1,357 @@
+﻿@using CRMS_WEB.Models.beans;
+@using PagedList.Mvc;
+@using PagedList;
+@using CRMS_WEB.Coverts;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewBag.Title = "RepairDescription";
+    ConvertClass cv = new ConvertClass();
+
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Layout = "~/Views/Shared/Template_admin.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Layout = "~/Views/Shared/Template_emp.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 3)
+        {
+            Response.Redirect("~/Home");
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+    }
+
+    /// Data list
+    var repair = ViewData["Repair"] as RepairDetailModel;
+
+}
+
+<script>
+    $(document).ready(function () {
+        $("#services").addClass("active");  // add class nav
+    });
+</script>
+
+<div class="wrapper col2">
+    <div id="breadcrumb">
+        <ul>
+            <li class="first">คุณอยู่ที่ </li>
+            <li>&#187;</li>
+            <li><a href="~/Services">บริการ</a></li>
+            <li>&#187;</li>
+            <li class="current"><a href="javascript:void(0)">รายละเอียดการซ่อม</a></li>
+
+            <li style="float:right;">
+                <button onclick="goto('../User/UserEditing?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูลส่วนตัว" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-cog"></i> </button>
+                <button onclick="goto('/User/ManagerProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="wrapper col4">
+    <div id="container">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                เลขที่ : @repair.REPAIR.REPAIR_NO
+                <span style="float:right;">
+                    @if (repair.REPAIR.STATUS.STATUS_ID == 1)
+                    {
+                        <b style="color:orange;">@repair.REPAIR.STATUS.STATUS_NAME</b>
+                    }
+                    else if (repair.REPAIR.STATUS.STATUS_ID == 2)
+                    {
+                        <b style="color:yellowgreen;">@repair.REPAIR.STATUS.STATUS_NAME</b>
+                    }
+                    else if (repair.REPAIR.STATUS.STATUS_ID == 3)
+                    {
+                        <b style="color:green;">@repair.REPAIR.STATUS.STATUS_NAME</b>
+                    }
+                    else
+                    {
+                        <b style="color:red;">@repair.REPAIR.STATUS.STATUS_NAME</b>
+                    }
+                </span>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+
+                    <div class="col-sm-6 col-md-4">
+                        <div class="thumbnail">
+                            @if (System.IO.File.Exists(Server.MapPath("~/Content/img_repair/" + repair.REPAIR.IMAGES)))
+                            {
+                                <img src="@Url.Content("../Content/img_repair/"+repair.REPAIR.IMAGES)" alt="..." style="width:242px; height:200px;">
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("../Content/images/No_image.png")" alt="..." style="width:242px; height:200px;">
+                            }
+                        </div>
+                    </div>
+                    <div class="col-xs-8">
+                        <div class="col-lg-10">
+                           
+                        </div>
+                        <div class="col-lg-2">
+                            <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#updateStatus" style="float:right;"> <i class="glyphicon glyphicon-save"></i> อัพเดทข้อมูล</button
+                        </div>
+                    </div>
+
+                </div>
+                <table class="table">
+                    <tr>
+                        <td style="width:150px;text-align:right;">
+                            <label style="color:#000000;">รายละเอียด :</label>
+                        </td>
+                        <td>
+                            <dl>
+                                <dt>ประเภท</dt>
+                                <dd>- @( repair.REPAIR.PRODUCT.TYPE.PRO_TYPE_NAME)</dd>
+                                <dt>รุ่น/Model</dt>
+                                <dd>- @(repair.REPAIR.PRODUCT.BANRD.PRO_BAND_NAME + " " + repair.REPAIR.MODEL + " " + repair.REPAIR.COLOR)</dd>
+                                <dt>สาเหตุที่ส่งซ่อม</dt>
+                                <dd>- @(repair.REPAIR.DAMAGE)</dd>
+                                <dt>ข้อมูลเพิ่มเติม</dt>
+                                <dd>- @(repair.REPAIR.REPAIR_DETAIL)</dd>
+                            </dl>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:100px;text-align:right;">
+                            <label style="color:#000000;">ลูกค้า :</label>
+                        </td>
+                        <td>
+                            <button onclick="goto('../Customer/CustomerProfile?custID=@repair.REPAIR.CUSTOMER.CUST_NO')" data-toggle="tooltip" data-original-title="ดูข้อมูลของลูกค้า รวมทั้งส่ง SMSหรือข้อความในระบบได้" style="float:right;" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-user"></i> ข้อมูลลูกค้า</button>
+                            <dl>
+                                <dt>ชื่อ-สกุล</dt>
+                                <dd>@(repair.REPAIR.CUSTOMER.C_NAME + " " + repair.REPAIR.CUSTOMER.C_LASTNAME)</dd>
+                                <dt>ข้อมูลติดต่อ</dt>
+                                <dd>
+                                    - @(repair.REPAIR.CUSTOMER.C_TEL) <br />    <!-- เบอร์โทร -->
+                                    - @(repair.REPAIR.CUSTOMER.C_EMAIL)<br />     <!-- เมล -->
+                                    - @(repair.REPAIR.CUSTOMER.C_ADDRESS)         <!--Address-->
+                                </dd>
+                            </dl>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:100px;text-align:right;"> <label style="color:#000000;">วันส่งทำรายการ</label></td>
+                        <td>
+                            @(repair.REPAIR.DATE_ASSIGN)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:100px;text-align:right;"> <label style="color:#000000;">วันนัดรับ</label></td>
+                        <td>
+                            @repair.REPAIR.DATE_CONSIGN
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:100px;text-align:right;"> <label style="color:#000000;">ผู้รับผิดชอบ</label></td>
+                        <td>
+                            @(repair.REPAIR.STAFF.NAME + " " + repair.REPAIR.STAFF.LASTNAME)<br />
+                            โทร : @repair.REPAIR.STAFF.TEL
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:100px;text-align:right;"> <label style="color:#000000;">ผู้รับเรื่อง</label></td>
+                        <td>
+                            @(repair.REPAIR.RECIPIENT_ID.NAME + " " + repair.REPAIR.RECIPIENT_ID.LASTNAME)<br />
+                            โทร : @repair.REPAIR.RECIPIENT_ID.TEL
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h4>
+                                อะไหล่ที่ใช้ <small style="float:right;">
+                                    <button onclick="goto('../Services/WithdrawParts?repID=@repair.REPAIR.REPAIR_NO')" class="btn btn-default btn-sm"> <i class="glyphicon glyphicon-credit-card"></i> เบิกอะไหล่</button>
+                                @if (repair.STOCK.Count(c => c.APROVE.Contains("allow")) > 0)
+                                {
+                                    <button onclick="window.open('../Services/RepairDescriptionBilling?repID=@repair.REPAIR.REPAIR_NO')" class="btn btn-sm btn-default"><i class="glyphicon glyphicon-print" style="color:green;"> </i> พิมพ์ใบเสร็จ</button>
+                                }
+
+                                </small>
+                            </h4>
+                            <table class="table">
+                                <thead>
+                                    <tr style="background:#EEE;">
+                                        <th style="width:5%;text-align:center;">อนุมัติ</th>
+                                        <th style="width:20%;text-align:center;">วันที่เบิก</th>
+                                        <th style="width:40%;text-align:center;">รายละเอียด</th>
+                                        <th style="width:5%;text-align:center;">จำนวน</th>
+                                        <th style="width:10%;text-align:center;">ราคา/ชิ้น</th>
+                                        <th style="width:10%;text-align:center;">รวม</th>
+                                        <th style="width:10%;text-align:center;">ตัวจัดการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (repair.STOCK.Count > 0)
+                                    {
+                                        float sum = 0;
+
+                                        foreach (var stock in repair.STOCK)
+                                        {
+                                            // ตรวจสอบเพื่อเอาเฉพาะอะไหล่ที่อนุมัติแล้วมาแสดง
+                                            if (stock.APROVE.Equals("allow"))
+                                            {
+                                                <tr>
+                                                    <td align="center"> <em style="color:green;" class="glyphicon glyphicon-ok" data-toggle="tooltip" title="" data-original-title="อนุมัติแล้ว"></em> </td>
+                                                    <td>@stock.REQ_DATE</td>
+                                                    <td>@stock.STOCK_NO.PART.TYPE.PART_TYPE_NAME @stock.STOCK_NO.PART.BRAND.PART_BRAND_NAME @stock.STOCK_NO.STOCK_INFO</td>
+                                                    <td style="text-align:right;">@stock.REQ_UNIT</td>
+                                                    <td style="text-align:right;">@stock.STOCK_NO.PRICE.ToString("##,##")</td>
+                                                    <td style="text-align:right;font-weight:bold;">@((stock.REQ_UNIT * stock.STOCK_NO.PRICE).ToString("##,##"))</td>
+                                                    <td style="text-align:center;">
+                                                    </td>
+                                                </tr>
+                                                sum += stock.REQ_UNIT * stock.STOCK_NO.PRICE;
+                                            }
+                                            else if (stock.APROVE.Equals("wait"))
+                                            {
+                                                <tr>
+                                                    <td align="center"><em style="color:orange;" class="glyphicon glyphicon-hourglass" data-toggle="tooltip" title="" data-original-title="รอการอนุมัติ"></em></td>
+                                                    <td>@stock.REQ_DATE</td>
+                                                    <td>@stock.STOCK_NO.PART.TYPE.PART_TYPE_NAME @stock.STOCK_NO.PART.BRAND.PART_BRAND_NAME @stock.STOCK_NO.STOCK_INFO</td>
+                                                    <td style="text-align:right;">@stock.REQ_UNIT</td>
+                                                    <td style="text-align:right;">@stock.STOCK_NO.PRICE.ToString("##,##")</td>
+                                                    <td style="text-align:right;font-weight:bold;color:#CCC;">@((stock.REQ_UNIT * stock.STOCK_NO.PRICE).ToString("##,##"))</td>
+                                                    <td style="text-align:center;">
+                                                        <button onclick="ConfirmDel('../Requisition/WithdrawDeleting?reqID=@stock.REQ_ID&repID=@stock.REPAIR_NO.REPAIR_NO')" class="btn btn-default btn-sm" data-toggle="tooltip" title="" data-original-title="ลบการอนุมัติ"><i class="glyphicon glyphicon-trash" style="color:red;"></i></button>
+                                                        <button onclick="WithdrawEditPopup(@stock.REQ_ID)" class="btn btn-default btn-sm" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูล"><i style="color:orange;" class="glyphicon glyphicon-edit"></i></button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td align="center"><em style="color:red;" class="glyphicon glyphicon-remove" data-toggle="tooltip" title="" data-original-title="ไม่อนุมัติ"></em></td>
+                                                    <td>@stock.REQ_DATE</td>
+                                                    <td>@stock.STOCK_NO.PART.TYPE.PART_TYPE_NAME @stock.STOCK_NO.PART.BRAND.PART_BRAND_NAME @stock.STOCK_NO.STOCK_INFO</td>
+                                                    <td style="text-align:right;">@stock.REQ_UNIT</td>
+                                                    <td style="text-align:right;">@stock.STOCK_NO.PRICE.ToString("##,##")</td>
+                                                    <td style="text-align:right;font-weight:bold;color:#CCC;">@((stock.REQ_UNIT * stock.STOCK_NO.PRICE).ToString("##,##"))</td>
+                                                    <td></td>
+                                                </tr>
+                                            }
+                                        }
+                                        // รวม
+                                        <tr>
+                                            <td style="background: #C2E3F3; " colspan="5" align="center">
+                                                <b>รวม</b>
+                                            </td>
+                                            <td align="right" style="background: #C2E3F3; ">
+                                                <b>@(sum==0? "0" : sum.ToString("##,##"))</b>
+                                            </td>
+                                            <td align="right" style="background: #C2E3F3;"><b>บาท</b></td>
+                                        </tr>
+                                    }
+                                    // ถ้าไม่มีข้อมูล
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="6" style="text-align: center; color: red; "><b>ไม่มีข้อมูล</b></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+
+        <div class="clear"></div>
+    </div>
+</div>
+<script>
+    var WithdrawEditPopup = function (reqID) {
+        $("#popup").load("../Services/RepairDescription_WithdrawEditPopup", {"reqID":reqID}, function (data,status) {
+            if(status =="success"){
+                $("#WithdrawEditPopup").modal("show");
+            }
+        });
+    }
+</script>
+
+
+
+@* popup *@
+@* Update status popup *@
+<div class="modal fade" id="updateStatus">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="~/Services/UpdateDetail" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">อัพเดทรายละเอียด</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label">ภาพการซ่อม </label>
+                        <div class="col-xs-6">
+                            <div class="thumbnail">
+                                @if (System.IO.File.Exists(Server.MapPath("~/Content/img_repair/" + repair.REPAIR.IMAGES)))
+                                {
+                                    <img id="picDisplay" src="@Url.Content("~/Content/img_repair/"+repair.REPAIR.IMAGES)" alt="..." style="width:242px; height:200px;">
+                                }
+                                else
+                                {
+                                    <img id="picDisplay" src="@Url.Content("~/Content/images/No_image.png")" alt="..." style="width:242px; height:200px;">
+                                }
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label">อัพเดทสถานะ</label>
+                        <div class="col-xs-9">
+                            <input type="hidden" name="oldPic" value="@repair.REPAIR.IMAGES" />
+                            <input type="file" name="pics" value="@repair.REPAIR.IMAGES" onchange="document.getElementById('picDisplay').src = window.URL.createObjectURL(this.files[0])" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label">อัพเดทสถานะ</label>
+                        <div class="col-xs-9">
+                            <select name="repStatusID" class="form-control">
+                                @foreach (var st in ViewData["STATUS"] as List<RepStatusModel>)
+                                {
+                                    <option value="@st.STATUS_ID" selected="@(st.STATUS_ID == repair.REPAIR.STATUS.STATUS_ID)">@st.STATUS_NAME</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-text-input" class="col-xs-3 col-form-label">ข้อมูลเพิ่มเติม</label>
+                        <div class="col-xs-9">
+                            <textarea name="repDetail" class="form-control" rows="5" style="resize:none;">@repair.REPAIR.REPAIR_DETAIL</textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-default btn-sm" data-dismiss="modal">ปิด</button>
+                    <button type="submit" name="repID" value="@repair.REPAIR.REPAIR_NO" class="btn btn-primary btn-sm">บันทึก</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

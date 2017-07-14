@@ -1,0 +1,78 @@
+﻿@using CRMS_WEB.Models.beans;
+@{
+    ViewBag.Title = "ManageProduct_DataLoading";
+
+    var brd = ViewData["BRAND"] as List<ProductBrandModel>;
+    var product = ViewData["PRODUCT"] as List<ProductModel>;
+
+
+}
+@if (brd.Count > 0)
+{
+    foreach (var brand in brd)
+    {
+        bool chk = false;
+        foreach (var pro in product)
+        {
+            if (pro.BANRD.PRO_BRAND_ID == brand.PRO_BRAND_ID)
+            {
+                chk = true;
+                break;
+            }
+            else
+            {
+                chk = false;
+            }
+        }
+
+        if (chk)
+        {
+            <div class="col-lg-3">
+                <label for="@brand.PRO_BRAND_ID">
+                    <input type="checkbox" name="probrand_id" value="@brand.PRO_BRAND_ID" id="@brand.PRO_BRAND_ID" checked /> @brand.PRO_BAND_NAME
+                </label>
+            </div>
+        }
+        else
+        {
+            <div class="col-lg-3">
+                <label for="@brand.PRO_BRAND_ID">
+                    <input type="checkbox" name="probrand_id" value="@brand.PRO_BRAND_ID" id="@brand.PRO_BRAND_ID" /> @brand.PRO_BAND_NAME
+                </label>
+            </div>
+        }
+
+
+
+    }
+
+    <div class="col-lg-12">
+        <hr style="border:1px solid #EEE;" />
+        <button class="btn btn-success btn-sm" style="float:right;"> <i class="glyphicon glyphicon-save"></i> บันทึก</button>
+    </div>
+}
+else
+{
+    <center>
+        <label style="color:red;">ไม่มีข้อมูล</label>
+    </center>
+}
+
+<script>
+    $(document).ready(function () {
+        $("[type='checkbox']").click(function () {
+            var x = $(this).val();
+
+            if ($(this).is(":checked")) {
+                console.log("true");
+            }
+            else {
+                var c = $("[type='radio']:checked").val();
+                $.post("Uncheck", { "brand_id": x, "type_id": c }, function (re) {
+
+                    console.log(re.errMsg);
+                });
+            }
+        });
+    });
+</script>

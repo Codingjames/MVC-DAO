@@ -1,0 +1,290 @@
+﻿@using CRMS_WEB.Models.beans;
+@using CRMS_WEB.Coverts;
+@using PagedList.Mvc;
+@using PagedList;
+@{
+    ViewBag.Title = "SmsCustomer";
+
+    ConvertClass cv = new ConvertClass();
+    if (Session["PRIO"] != null)
+    {
+        if ((int)Session["PRIO"] == 1)
+        {
+            Layout = "~/Views/Shared/Template_admin.cshtml";
+        }
+        else if ((int)Session["PRIO"] == 2)
+        {
+            Response.Redirect("~/Home");
+        }
+        else if ((int)Session["PRIO"] == 3)
+        {
+            Response.Redirect("~/Home");
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Home");
+        // HttpResponse.Redirecting = "";
+    }
+    //data
+    var cust = ViewBag.CUSTOMER as CustomerModel;
+    var sms = ViewBag.SMS ;//as List<MassageModel>;
+}
+<script>
+    $(document).ready(function () {
+        $("#user").addClass("active");
+    });
+
+</script>
+
+@if (Request.Params["SearchText"] != null)
+{
+    <script>
+        $(document).ready(function () {
+            $("[name='SearchText']").focus();
+        });
+    </script>
+}
+
+<div class="wrapper col2">
+    <div id="breadcrumb">
+        <ul>
+            <li class="first">คุณอยู่ที่ </li>
+            <li>&#187;</li>
+            <li><a>จัดการผู้ใช้</a></li>
+            <li>&#187;</li>
+            <li class=""><a href="~/Customer/ManageCustomer">การจัดการขุอมูลลูกค้า</a></li>
+            <li>&#187;</li>
+            <li class=""><a href="/Customer/CustomerProfile?custID=@Request.Params["custID"]">ข้อมูลประวัติลูกค้า</a></li>
+            <li>&#187;</li>
+            <li class="current"><a>ข้อความ SMS</a></li>
+            <li style="float:right;">
+                <button onclick="goto('../User/UserEditing?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="แก้ไขข้อมูลส่วนตัว" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-cog"></i> </button>
+                <button onclick="goto('/User/ManagerProfile?userID=@Session["ID"]')" data-toggle="tooltip" title="" data-original-title="ข้อมูลโดยละเอียด" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-user"></i> </button>
+
+                <button onclick="window.location='../Login/Logout'" data-toggle="tooltip" title="" data-original-title="ออกจากระบบ" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-log-out"></i> </button>
+            </li>
+            <li style="float:right;">
+                <label style="margin: 0px 8px 0px 8px; ">
+                    @(Session["LEVEL"] + " ")
+                    @(Session["NAME"])
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="wrapper col4">
+    <div id="container">
+        <div class="panel panel-info">
+            <div class="panel-heading" style="height:53px;">
+                ประวัติลูกค้า
+                <span style="float: right; margin-right:10px; " data-toggle="tooltip" title="" data-original-title="ส่งข้อความ SMS ไปยังปลายทาง">
+                    <button onclick="" class="btn btn-default btn-sm" data-toggle="modal" data-target="#smsAdding">
+                        <i class=" glyphicon glyphicon-share-alt"></i> ส่งSMS
+                    </button>
+                </span>
+            </div>
+            <div class="panel-body">
+                <label style="color:#000000;">รายละเอียด :</label>
+                <table class="table">
+
+
+                    <tr>
+                        <td align="right" style="width:150px;"><b>รหัสสมาชิก</b></td>
+                        <td>@cust.CUST_UID</td>
+                    </tr>
+                    <tr>
+                        <td align="right"><b>ชื่อ - สกุล</b></td>
+                        <td>@(cust.C_NAME + " " + cust.C_LASTNAME)</td>
+                    </tr>
+                    <tr>
+                        <td align="right"><b>ที่อยู่</b></td>
+                        <td>@cust.C_ADDRESS</td>
+                    </tr>
+                    <tr>
+                        <td align="right"><b>เบอร์โทรศัพท์</b></td>
+                        <td>@cust.C_TEL</td>
+                    </tr>
+                    <tr>
+                        <td align="right"><b>อีเมล</b></td>
+                        <td>@cust.C_EMAIL</td>
+                    </tr>
+                </table>
+                <h2>รายการข้อความ SMS</h2>
+                <div class="container">
+
+                    @if(sms.Count > 0){
+                        foreach(var s in sms){
+                            
+                            <div class="bubble">
+                            <h5>เบอร์ @s.TEL </h5>
+                            @s.MSG
+                                <hr style="border: 1px solid #000; margin-bottom: 3px; width: 300px;" />
+                                <span style="float:right; font-size:12px;">วันที่ @s.SMS_REG.ToString("d MMMM yyyy")</span>
+                         </div>
+                        
+                        
+                        }  
+                    }
+                   
+
+                </div>
+              
+
+            </div>
+        </div>
+
+        <div class="clear"></div>
+    </div>
+</div>
+<script>
+    var smsSendAndAddingPopup = function (custID) {
+        $("#popup").load("../SysMassage/CustomerMassage_MassageAddingpopup", { "custID": custID }, function (data, status) {
+            console.log(status);
+            if (status == "success") {
+                $("#MassageAdding").modal("show");
+
+            }
+        });
+    }
+</script>
+
+<style>
+    /* Bit of normalisation */
+
+    /*body {
+        background-color: #eee;
+        color: #222;
+        font: 0.8125em/1.5 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }*/
+
+    img {
+        display: block;
+        height: auto;
+        max-width: 100%;
+    }
+
+    .container {
+        padding: 40px 20px;
+        margin: 0 auto;
+        width: auto;
+    }
+
+    /* .bubble */
+
+    .bubble {
+        background-image: linear-gradient(bottom, rgb(210,244,254) 25%, rgb(149,194,253) 100%);
+        background-image: -o-linear-gradient(bottom, rgb(210,244,254) 25%, rgb(149,194,253) 100%);
+        background-image: -moz-linear-gradient(bottom, rgb(210,244,254) 25%, rgb(149,194,253) 100%);
+        background-image: -webkit-linear-gradient(bottom, rgb(210,244,254) 25%, rgb(149,194,253) 100%);
+        background-image: -ms-linear-gradient(bottom, rgb(210,244,254) 25%, rgb(149,194,253) 100%);
+        background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0.25, rgb(210,244,254)), color-stop(1, rgb(149,194,253)) );
+        border: solid 1px rgba(0, 0, 0, 0.5);
+        /* vendor rules */
+        border-radius: 20px;
+        /* vendor rules */
+        box-shadow: inset 0 5px 5px rgba(255, 255, 255, 0.4), 0 1px 3px rgba(0, 0, 0, 0.2);
+        /* vendor rules */
+        box-sizing: border-box;
+        clear: both;
+        float: left;
+        margin-bottom: 20px;
+        padding: 8px 30px;
+        position: relative;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+        width: auto;
+        max-width: 100%;
+        word-wrap: break-word;
+    }
+
+        /*.bubble:before, .bubble:after {
+            border-radius: 20px / 10px;
+            content: '';
+            display: block;
+            position: absolute;
+        }
+
+        .bubble:before {
+            border: 10px solid transparent;
+            border-bottom-color: rgba(0, 0, 0, 0.5);
+            bottom: 0;
+            left: -7px;
+            z-index: -2;
+        }
+
+        .bubble:after {
+            border: 8px solid transparent;
+            border-bottom-color: #d2f4fe;
+            bottom: 1px;
+            left: -5px;
+        }*/
+
+        .bubble:before, .bubble:after {
+            border-radius: 20px / 10px;
+            content: '';
+            display: block;
+            position: absolute;
+        }
+
+        .bubble:before {
+            border: 10px solid transparent;
+            border-bottom-color: rgba(0, 0, 0, 0.5);
+            bottom: 0;
+            left: -7px;
+            z-index: -2;
+        }
+
+        .bubble:after {
+            border: 8px solid transparent;
+            border-bottom-color: #d2f4fe;
+            bottom: 1px;
+            left: -5px;
+        }
+    .bubble--alt {
+        background-image: linear-gradient(bottom, rgb(172,228,75) 25%, rgb(122,205,71) 100%);
+        background-image: -o-linear-gradient(bottom, rgb(172,228,75) 25%, rgb(122,205,71) 100%);
+        background-image: -moz-linear-gradient(bottom, rgb(172,228,75) 25%, rgb(122,205,71) 100%);
+        background-image: -webkit-linear-gradient(bottom, rgb(172,228,75) 25%, rgb(122,205,71) 100%);
+        background-image: -ms-linear-gradient(bottom, rgb(172,228,75) 25%, rgb(122,205,71) 100%);
+        background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0.25, rgb(172,228,75)), color-stop(1, rgb(122,205,71)) );
+        float: right;
+    }
+
+        .bubble--alt:before {
+            border-bottom-color: rgba(0, 0, 0, 0.5);
+            border-radius: 20px / 10px;
+            left: auto;
+            right: -7px;
+        }
+
+        .bubble--alt:after {
+            border-bottom-color: #ace44b;
+            border-radius: 20px / 10px;
+            left: auto;
+            right: -5px;
+        }
+</style>
+
+<div class="modal fade" id="smsAdding" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <form action="~/SysSms/SendSms" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <b>ถึง :</b> คุณ@(cust.C_NAME + " " + cust.C_LASTNAME) <br />
+                    <b>เบอร์ :</b> @cust.C_TEL
+                </div>
+                <div class="modal-body">
+                    
+                    <textarea name="sms" placeholder="ข้อความไม่เกิน 70 ตัวอักษร" maxlength="70" style="resize:none;" class="form-control" required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="tel" value="@cust.C_TEL" />
+                    <input type="hidden" name="custID" value="@cust.CUST_NO" />
+                    <button type="submit" class="btn btn-default btn-sm"><i style="color:green;" class="glyphicon glyphicon-send"></i> ส่ง</button>
+                    <button type="reset" class="btn btn-default btn-default" data-dismiss="modal">ยกเลิก</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
